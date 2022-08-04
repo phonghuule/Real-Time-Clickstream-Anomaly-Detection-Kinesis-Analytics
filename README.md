@@ -121,14 +121,14 @@ The KDG simplifies the task of generating data and sending it to Amazon Kinesis.
     * Click **Save changes**. Your Kinesis Data Analytics Application is created with an input stream.
             ![source-da](./images/input-stream-kda.png)
     * Now navigate to the 'Real-time analytics' tab and click on Configure.
-    * Replace the sql with the contents of the following file: [anomaly_detection.sql](./scripts/Kinesis_Anlaytics_anomaly_detection.sql) and click on 'Save and run application'. This should take a minute to run.
+    * Replace the sql with the contents of the following file: [anomaly_detection.sql](./scripts/CloudFormation/Kinesis_Anlaytics_anomaly_detection.sql) and click on 'Save and run application'. This should take a minute to run.
             ![rtanalyticssql](./images/rtanalyticssql.png)
     * On the same page scroll down to view the Input and Output sub tab. The Input sub tab will list the source stream and the Output sub-tab will display the output streams created by the SQL run before.
             ![inputoutput](./images/inputoutput.png)
 
 At this point you have created:
 * Kinesis Data Analytics application schema for click stream and impression stream data using the 'Schema Discovery Payload' sent from the KDG tool
-* An output stream schema, using [anomaly_detection.sql](./scripts/Kinesis_Anlaytics_anomaly_detection.sql). The schema will in real-time convert the input stream to the output stream.
+* An output stream schema, using [anomaly_detection.sql](./scripts/CloudFormation/Kinesis_Anlaytics_anomaly_detection.sql). The schema will in real-time convert the input stream to the output stream.
 
 Note: The DESTINATION_SQL_STREAM uses the RANDOM_CUT_FOREST function to detect anomalies within the input data stream. You can read more about the function [here](https://docs.aws.amazon.com/kinesisanalytics/latest/sqlref/sqlrf-random-cut-forest.html).
 
