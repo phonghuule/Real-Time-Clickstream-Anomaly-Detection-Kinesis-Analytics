@@ -92,37 +92,43 @@ The KDG simplifies the task of generating data and sending it to Amazon Kinesis.
 
  
 ## Kinesis Analytics Pipeline Application setup
-1. Navigate to the [Amazon Kinesis](https://ap-southeast-2.console.aws.amazon.com/kinesis/home?region=ap-southeast-2#/home) console
-2. On the Get Started portlet, select Kinesis Data Analytics, and click on Create Application.
-     ![KinesisDataAnalyticsGetStarted](./images/KinesisDataAnalyticsGetStarted.png)
-3. On the Kinesis Data Analytics - Create application page:
-    * Select Legacy SQL as the runtime and click on Create Application.
-            ![selectRuntime](./images/selectRuntime.png)
+1. Navigate to the [Amazon Kinesis Analytics applications SQL applications (legacy)](https://console.aws.amazon.com/kinesisanalytics/home#/list/sql-applications-legacy)
+2. Click **Create SQL application (legacy)** to create an application.
+3. On the Create legacy SQL application page, fill the fields as follows:
     * For application name, type ```anomaly-detection-application```.
     * Type a description for the analytics application and click on Create Application
-    * Once created, Open analytics application and expand the 'Steps to configure application' and click on 'Configure source stream'.
+
+        ![CreateKDA](./images/create-kda.png)
+
+    * Click **Create legacy SQL application**.
+    * Once created, On the application page, click **Configure** under Source tab.
             ![ConfigureSourceStream](./images/ConfigureSourceStream.png)
-    * Select the Source as Kinesis Data Firehose delivery stream and select the Delivery Stream created by the CloudFormation template: **{stack-name}-FirehoseDeliveryStream-{random string}**
+    * For Source, choose **Kinesis Firehose delivery stream**. 
+    * For Delivery stream, choose **{stack-name}-FirehoseDeliveryStream-{some-random-string}** from the "Kinesis Firehose delivery stream" dropdown. 
+    * For Record preprocessing with AWS Lambda, leave it as Off.
+    * For IAM role for reading source stream, select Choose from IAM roles that Kinesis Analytics can assume.. Under the Service role dropdown, choose the role **{stack-name}-CSEKinesisAnalyticsRole-{random string}**. 
     * Select 'Off' for the Record preprocessing with AWS Lambda for this lab.
     * Select 'Choose from IAM roles that Kinesis Data Analytics can assume' and associate the following service role: **{stack-name}-CSEKinesisAnalyticsRole-{random string}**
+
+        ![CreateKDA](./images/source-kda.png)
+
     * **Do not** Click on Discover Schema at this point.
         Open the KDG tool, and click on 'Send Data' for the 'Schema Discovery Payload' template. This will send the sample data to the Kinesis Data Firehose delivery stream.
         Make sure to login to the tool. 
             ![senddatatokinesis](./images/senddatatokinesis.png)
     * Now go back to the AWS console and click on Discover Schema to display the schema and the formatted data received. 
             ![disoverschema](./images/disoverschema.png)
-    * Leave the 'Use discovered schema' option selected for 'Schema options' and click on Save changes. The source stream should show as below:
-            ![source-da](./images/source-da.png)
+    * Click **Save changes**. Your Kinesis Data Analytics Application is created with an input stream.
+            ![source-da](./images/input-stream-kda.png)
     * Now navigate to the 'Real-time analytics' tab and click on Configure.
-    * Replace the sql with the contents of the following file: [anomaly_detection.sql](https://aws-dataengineering-day.workshop.aws/300/scripts/Kinesis_Anlaytics_anomaly_detection.sql) and click on 'Save and run application'. This should take a minute to run.
+    * Replace the sql with the contents of the following file: [anomaly_detection.sql](./scripts/Kinesis_Anlaytics_anomaly_detection.sql) and click on 'Save and run application'. This should take a minute to run.
             ![rtanalyticssql](./images/rtanalyticssql.png)
-    
     * On the same page scroll down to view the Input and Output sub tab. The Input sub tab will list the source stream and the Output sub-tab will display the output streams created by the SQL run before.
             ![inputoutput](./images/inputoutput.png)
 
 At this point you have created:
 * Kinesis Data Analytics application schema for click stream and impression stream data using the 'Schema Discovery Payload' sent from the KDG tool
-* An output stream schema, using [anomaly_detection.sql](https://aws-dataengineering-day.workshop.aws/300/scripts/Kinesis_Anlaytics_anomaly_detection.sql). The schema will in real-time convert the input stream to the output stream.
+* An output stream schema, using [anomaly_detection.sql](./scripts/Kinesis_Anlaytics_anomaly_detection.sql). The schema will in real-time convert the input stream to the output stream.
 
 Note: The DESTINATION_SQL_STREAM uses the RANDOM_CUT_FOREST function to detect anomalies within the input data stream. You can read more about the function [here](https://docs.aws.amazon.com/kinesisanalytics/latest/sqlref/sqlrf-random-cut-forest.html).
 
