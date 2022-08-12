@@ -1,7 +1,8 @@
 # Real-Time Clickstream Anomaly Detection Kinesis Analytics
 
-This lab is provided as part of **[AWS Innovate Data Edition](https://aws.amazon.com/events/aws-innovate/data/)**,  it has been adapted from an [AWS Workshop](https://aws-dataengineering-day.workshop.aws/300/320-main-lab.html)
-Click [here](https://github.com/phonghuule/aws-innovate-data) to explore the full list of hands-on labs.
+This lab is provided as part of **[AWS Innovate Data Edition](https://aws.amazon.com/events/aws-innovate/data/)**,  it has been adapted from an [AWS Workshop](https://catalog.us-east-1.prod.workshops.aws/workshops/976050cc-0606-4b23-b49f-ca7b8ac4b153/en-US/300/320-main-lab)
+
+Click [here](https://github.com/phonghuule/aws-innovate-data-edition-2022) to explore the full list of hands-on labs.
 
 ℹ️ You will run this lab in your own AWS account and running this lab will incur some costs. Please follow directions at the end of the lab to remove resources to avoid future costs.
 
@@ -175,3 +176,11 @@ Follow the below steps to cleanup your account to prevent any aditional charges:
 * Select the stack and delete. This action will delete all the resources that were created as part of the lab and stop incurring charges.
             ![deletedeployedstack](./images/deletedeployedstack.png)
             
+## Survey
+Let us know what you thought of this lab and how we can improve the experience for you in the future by completing [this poll](https://amazonmr.au1.qualtrics.com/jfe/form/SV_6G1rmmzxUkIajTo?Session=HOL008). Participants who complete the surveys from AWS Innovate Online Conference will receive a gift code for USD25 in AWS credits 1, 2 & 3. AWS credits will be sent via email by September 30, 2022.
+
+Note: Only registrants of AWS Innovate Online Conference who complete the surveys will receive a gift code for USD25 in AWS credits via email.
+ 
+1. AWS Promotional Credits Terms and conditions apply: https://aws.amazon.com/awscredits/ 
+2. Limited to 1 x USD25 AWS credits per participant.
+3. Participants will be required to provide their business email addresses to receive the gift code for AWS credits.
