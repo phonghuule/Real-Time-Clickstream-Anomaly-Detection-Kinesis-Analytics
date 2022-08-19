@@ -15,6 +15,7 @@ Click [here](https://github.com/phonghuule/aws-innovate-data-edition-2022) to ex
 * [Configure Output stream to a Destination](#configure-output-stream-to-a-destination)
 * [Test E2E Architecture](#test-e2e-architecture)
 * [Cleanup](#cleanup)
+* [Conclusion](#conclusion)
 * [Survey](#survey)
 
 
@@ -176,6 +177,13 @@ Follow the below steps to cleanup your account to prevent any aditional charges:
 * Select the stack and delete. This action will delete all the resources that were created as part of the lab and stop incurring charges.
             ![deletedeployedstack](./images/deletedeployedstack.png)
             
+## Conclusion
+Throughout the lab, you've learnt how to use Kinesis Data Analytics to perform Real-Time Clickstream Anomaly Detection
+
+[Streaming ingest and stream processing](https://docs.aws.amazon.com/wellarchitected/latest/analytics-lens/streaming-data-processing.html) is one of the scenarios in the [Well-Architected Framework Data Analytics Lens](https://docs.aws.amazon.com/wellarchitected/latest/analytics-lens/analytics-lens.html)
+
+We highly recommend you to deep dive the [Well-Architected Data Analytics Lens](https://docs.aws.amazon.com/wellarchitected/latest/analytics-lens/analytics-lens.html) to understand the pros and cons of decisions while building analytics systems and workloads on AWS.
+
 ## Survey
 Let us know what you thought of this lab and how we can improve the experience for you in the future by completing [this poll](https://amazonmr.au1.qualtrics.com/jfe/form/SV_6G1rmmzxUkIajTo?Session=HOL008). Participants who complete the surveys from AWS Innovate Online Conference will receive a gift code for USD25 in AWS credits 1, 2 & 3. AWS credits will be sent via email by September 30, 2022.
 
