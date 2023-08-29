@@ -16,7 +16,7 @@ This lab is provided as part of **[AWS Innovate Data Edition](https://aws.amazon
 
 
 ## Overview
-This lab helps you to analyze [streaming data](https://aws.amazon.com/streaming-data/) using [Amazon Kinesis Data Analytics Studio] to get timely insights and react quickly to new information you receive from your business and your applications. 
+This lab helps you to analyze [streaming data](https://aws.amazon.com/streaming-data/) using [Amazon Kinesis Data Analytics Studio](https://aws.amazon.com/kinesis/data-analytics/features/?nc=sn&loc=2) to get timely insights and react quickly to new information you receive from your business and your applications. 
 
 This is data that must usually be processed sequentially and incrementally on a record-by-record basis or over sliding time windows, and can be used for a variety of analytics including correlations, aggregations, filtering, and sampling.
 
@@ -62,7 +62,7 @@ It automatically generates dummy sensors data to send to client.
     "event_time": "{{date.now("YYYY-MM-DDTHH:mm:ss.SSS")}}"
 }
 ```
-1. Click **[Send data]** button at last to start sending the data. The Data continues to be sent to Kinesis Data Stream until you click [Stop Sending Data to Kinesis] displayed in the pop-up menu or close the browser tab.
+6. Click **[Send data]** button at last to start sending the data. The Data continues to be sent to Kinesis Data Stream until you click [Stop Sending Data to Kinesis] displayed in the pop-up menu or close the browser tab.
 
 ## Set Up Kinesis Data Analytics Studio Notebook
 1. From the **Kinesis console**, select **my-input-stream** Kinesis data stream and choose **Process data in real time** from the Process drop-down. In this way, the stream is configured as a source for the notebook.
@@ -85,7 +85,7 @@ It automatically generates dummy sensors data to send to client.
 ## Analyze Streaming Data
 1. When the notebook is running, choose **Open in Apache Zeppelin** to get access to the notebook and write code in SQL, Python, or Scala to interact with streaming data and get insights in real time.
 ![Open Notebook](/images/notebook-open.png)
-1. Choose **Import Note** and upload [the following notebook](./scripts/Sensors.ipynb) and name it **Sensors**
+1. Choose **Import Note** and upload [the following notebook](./scripts/Sensors.zpln) and name it **Sensors**
 1. Open the imported note
 1. Follow the steps in the Notebook to perform streaming data analysis
 

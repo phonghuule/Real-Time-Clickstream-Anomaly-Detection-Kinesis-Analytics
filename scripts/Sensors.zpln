@@ -1,0 +1,524 @@
+﻿{
+  "paragraphs": [
+    {
+      "text": "/*\nCreate a sensor_data table describing the format of the data in the stream.\nThe first line tells to Apache Zeppelin to provide a stream SQL environment (%flink.ssql) for the Apache Flink interpreter.\n\nThe first part of the CREATE TABLE statement is familiar to anyone who has used SQL with a database. \nA table is created to store the sensor data in the stream. \nThe WATERMARK option is used to measure progress in the event time, \nas described in the Event Time and Watermarks section of the Apache Flink documentation.\n\nThe second part of the CREATE TABLE statement describes the connector used to receive data in the table \n(for example, kinesis or kafka), the name of the stream, the AWS Region, \nthe overall data format of the stream (such as json or csv), and the syntax used for timestamps (in this case, ISO 8601)\n*/",
+      "user": "anonymous",
+      "dateUpdated": "2023-08-29T04:55:24+0000",
+      "progress": 0,
+      "config": {
+        "editorSetting": {
+          "language": "scala",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "colWidth": 12,
+        "editorMode": "ace/mode/scala",
+        "fontSize": 9,
+        "results": {},
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": []
+      },
+      "apps": [],
+      "runtimeInfos": {},
+      "progressUpdateIntervalMs": 500,
+      "jobName": "paragraph_1693284924911_206069055",
+      "id": "paragraph_1693281472899_1218890430",
+      "dateCreated": "2023-08-29T04:55:24+0000",
+      "status": "READY",
+      "focus": true,
+      "$$hashKey": "object:288"
+    },
+    {
+      "text": "%flink.ssql\nCREATE TABLE sensor_data (\n    sensor_id INTEGER,\n    current_temperature DOUBLE,\n    status VARCHAR(6),\n    event_time TIMESTAMP(3),\n    WATERMARK FOR event_time AS event_time - INTERVAL '5' SECOND\n)\nPARTITIONED BY (sensor_id)\nWITH (\n    'connector' = 'kinesis',\n    'stream' = 'my-input-stream',\n    'aws.region' = 'us-east-1',\n    'scan.stream.initpos' = 'LATEST',\n    'format' = 'json',\n    'json.timestamp-format.standard' = 'ISO-8601'\n)",
+      "user": "anonymous",
+      "dateUpdated": "2023-08-29T04:55:24+0000",
+      "progress": 0,
+      "config": {
+        "editorSetting": {
+          "language": "sql",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "colWidth": 12,
+        "editorMode": "ace/mode/sql",
+        "fontSize": 9,
+        "results": {},
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "ERROR",
+        "msg": [
+          {
+            "type": "TEXT",
+            "data": "Fail to run sql command: CREATE TABLE sensor_data (\n    sensor_id INTEGER,\n    current_temperature DOUBLE,\n    status VARCHAR(6),\n    event_time TIMESTAMP(3),\n    WATERMARK FOR event_time AS event_time - INTERVAL '5' SECOND\n)\nPARTITIONED BY (sensor_id)\nWITH (\n    'connector' = 'kinesis',\n    'stream' = 'my-input-stream',\n    'aws.region' = 'us-east-1',\n    'scan.stream.initpos' = 'LATEST',\n    'format' = 'json',\n    'json.timestamp-format.standard' = 'ISO-8601'\n)\n"
+          },
+          {
+            "type": "ANGULAR",
+            "data": "<div class='container ng-scope' style='padding-left:0px;padding-right:0px;'>\n    <div class='panel panel-danger'>\n        <div class='panel-heading' ng-click='isOpen=!isOpen' ng-init='isOpen=false' style=\"cursor:pointer\">\n            <div class='plainTextContainer' style='font-weight:bolder'><i class=\"fa fa-caret-right fa-fw\" style=\"padding-right:7px;transition:all 0.3s;{{isOpen?'transform:rotate(90deg);transform-origin:25% 45%':''}}\"></i>Table (or view) my_database.sensor_data already exists in Catalog hive.</div>\n        </div>\n        <div class='panel-collapse' uib-collapse='!isOpen'>\n            <div class='text' style='max-height:300px;overflow:auto;padding:10px'>org.apache.flink.table.api.ValidationException: Could not execute CreateTable in path `hive`.`my_database`.`sensor_data`\n\tat org.apache.flink.table.catalog.CatalogManager.execute(CatalogManager.java:886)\n\tat org.apache.flink.table.catalog.CatalogManager.createTable(CatalogManager.java:649)\n\tat org.apache.flink.table.api.internal.TableEnvironmentImpl.executeInternal(TableEnvironmentImpl.java:872)\n\tat org.apache.flink.table.api.internal.TableEnvironmentImpl.executeSql(TableEnvironmentImpl.java:701)\n\tat org.apache.zeppelin.flink.Flink115SqlInterpreter.callDDL(Flink115SqlInterpreter.java:570)\n\tat org.apache.zeppelin.flink.Flink115SqlInterpreter.callOperation(Flink115SqlInterpreter.java:327)\n\tat org.apache.zeppelin.flink.Flink115SqlInterpreter.runSqlList(Flink115SqlInterpreter.java:236)\n\tat org.apache.zeppelin.flink.Flink115Shims.runSqlList(Flink115Shims.java:315)\n\tat org.apache.zeppelin.flink.FlinkStreamSqlInterpreter.runSqlList(FlinkStreamSqlInterpreter.java:103)\n\tat org.apache.zeppelin.flink.FlinkSqlInterpreter.internalInterpret(FlinkSqlInterpreter.java:63)\n\tat org.apache.zeppelin.interpreter.AbstractInterpreter.interpret(AbstractInterpreter.java:55)\n\tat org.apache.zeppelin.interpreter.LazyOpenInterpreter.interpret(LazyOpenInterpreter.java:110)\n\tat org.apache.zeppelin.interpreter.remote.RemoteInterpreterServer$InterpretJob.jobRun(RemoteInterpreterServer.java:860)\n\tat org.apache.zeppelin.interpreter.remote.RemoteInterpreterServer$InterpretJob.jobRun(RemoteInterpreterServer.java:752)\n\tat org.apache.zeppelin.scheduler.Job.run(Job.java:172)\n\tat org.apache.zeppelin.scheduler.AbstractScheduler.runJob(AbstractScheduler.java:132)\n\tat org.apache.zeppelin.scheduler.ParallelScheduler.lambda$runJobInScheduler$0(ParallelScheduler.java:46)\n\tat java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1128)\n\tat java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:628)\n\tat java.base/java.lang.Thread.run(Thread.java:829)\nCaused by: org.apache.flink.table.catalog.exceptions.TableAlreadyExistException: Table (or view) my_database.sensor_data already exists in Catalog hive.\n\tat org.apache.flink.table.catalog.hive.HiveCatalog.createTable(HiveCatalog.java:565)\n\tat org.apache.flink.table.catalog.CatalogManager.lambda$createTable$11(CatalogManager.java:660)\n\tat org.apache.flink.table.catalog.CatalogManager.execute(CatalogManager.java:882)\n\t... 19 more\nCaused by: AlreadyExistsException(message:Table sensor_data already exists.)\n\tat com.amazonaws.glue.catalog.metastore.GlueMetastoreClientDelegateWithFlinkProperties.validateNewTable(GlueMetastoreClientDelegateWithFlinkProperties.java:195)\n\tat com.amazonaws.glue.catalog.metastore.GlueMetastoreClientDelegateWithFlinkProperties.createTable(GlueMetastoreClientDelegateWithFlinkProperties.java:112)\n\tat com.amazonaws.glue.catalog.metastore.AWSCatalogMetastoreClient.createTable(AWSCatalogMetastoreClient.java:665)\n\tat java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)\n\tat java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)\n\tat java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)\n\tat java.base/java.lang.reflect.Method.invoke(Method.java:566)\n\tat org.apache.hadoop.hive.metastore.HiveMetaStoreClient$SynchronizedHandler.invoke(HiveMetaStoreClient.java:2327)\n\tat com.sun.proxy.$Proxy43.createTable(Unknown Source)\n\tat org.apache.flink.table.catalog.hive.client.HiveMetastoreClientWrapper.createTable(HiveMetastoreClientWrapper.java:176)\n\tat org.apache.flink.table.catalog.hive.HiveCatalog.createTable(HiveCatalog.java:561)\n\t... 21 more\n</div>\n        </div>\n    </div>\n</div>\n"
+          }
+        ]
+      },
+      "apps": [],
+      "runtimeInfos": {},
+      "progressUpdateIntervalMs": 500,
+      "jobName": "paragraph_1693284924911_1716462899",
+      "id": "paragraph_1693273771127_717778751",
+      "dateCreated": "2023-08-29T04:55:24+0000",
+      "status": "READY",
+      "$$hashKey": "object:289"
+    },
+    {
+      "text": "/*\nSimple SELECT to get all the content of the sensor_data table\nThe first line of the command has a parameter (type=update) so that the output of the SELECT, \nwhich is more than one row, is continuously updated when new data arrives.\n*/",
+      "user": "anonymous",
+      "dateUpdated": "2023-08-29T04:55:24+0000",
+      "progress": 0,
+      "config": {
+        "editorSetting": {
+          "language": "scala",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "colWidth": 12,
+        "editorMode": "ace/mode/scala",
+        "fontSize": 9,
+        "results": {},
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "apps": [],
+      "runtimeInfos": {},
+      "progressUpdateIntervalMs": 500,
+      "jobName": "paragraph_1693284924911_1714924067",
+      "id": "paragraph_1693281619175_1800424118",
+      "dateCreated": "2023-08-29T04:55:24+0000",
+      "status": "READY",
+      "$$hashKey": "object:290"
+    },
+    {
+      "text": "%flink.ssql(type=update)\nSELECT * FROM sensor_data;",
+      "user": "anonymous",
+      "dateUpdated": "2023-08-29T04:55:24+0000",
+      "progress": 0,
+      "config": {
+        "editorSetting": {
+          "language": "sql",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "colWidth": 12,
+        "editorMode": "ace/mode/sql",
+        "fontSize": 9,
+        "results": {
+          "0": {
+            "graph": {
+              "mode": "table",
+              "height": 300,
+              "optionOpen": false,
+              "setting": {
+                "table": {
+                  "tableGridState": {},
+                  "tableColumnTypeState": {
+                    "names": {
+                      "sensor_id": "string",
+                      "current_temperature": "string",
+                      "status": "string",
+                      "event_time": "string"
+                    },
+                    "updated": false
+                  },
+                  "tableOptionSpecHash": "[{\"name\":\"useFilter\",\"valueType\":\"boolean\",\"defaultValue\":false,\"widget\":\"checkbox\",\"description\":\"Enable filter for columns\"},{\"name\":\"showPagination\",\"valueType\":\"boolean\",\"defaultValue\":false,\"widget\":\"checkbox\",\"description\":\"Enable pagination for better navigation\"},{\"name\":\"showAggregationFooter\",\"valueType\":\"boolean\",\"defaultValue\":false,\"widget\":\"checkbox\",\"description\":\"Enable a footer for displaying aggregated values\"}]",
+                  "tableOptionValue": {
+                    "useFilter": false,
+                    "showPagination": false,
+                    "showAggregationFooter": false
+                  },
+                  "updated": false,
+                  "initialized": false
+                }
+              },
+              "commonSetting": {}
+            }
+          }
+        },
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "ERROR",
+        "msg": [
+          {
+            "type": "TABLE",
+            "data": "sensor_id\tcurrent_temperature\tstatus\tevent_time\n"
+          },
+          {
+            "type": "TEXT",
+            "data": "Fail to run sql command: SELECT * FROM sensor_data\n"
+          },
+          {
+            "type": "ANGULAR",
+            "data": "<div class='container ng-scope' style='padding-left:0px;padding-right:0px;'>\n    <div class='panel panel-danger'>\n        <div class='panel-heading' ng-click='isOpen=!isOpen' ng-init='isOpen=false' style=\"cursor:pointer\">\n            <div class='plainTextContainer' style='font-weight:bolder'><i class=\"fa fa-caret-right fa-fw\" style=\"padding-right:7px;transition:all 0.3s;{{isOpen?'transform:rotate(90deg);transform-origin:25% 45%':''}}\"></i>RuntimeException: Retries exceeded for getRecords operation - all 3 retry attempts failed.</div>\n        </div>\n        <div class='panel-collapse' uib-collapse='!isOpen'>\n            <div class='text' style='max-height:300px;overflow:auto;padding:10px'>java.lang.RuntimeException: Fail to run update type stream job\n\tat org.apache.zeppelin.flink.FlinkStreamSqlInterpreter.callInnerSelect(FlinkStreamSqlInterpreter.java:94)\n\tat org.apache.zeppelin.flink.FlinkStreamSqlInterpreter.lambda$open$0(FlinkStreamSqlInterpreter.java:49)\n\tat org.apache.zeppelin.flink.Flink115SqlInterpreter.callStreamInnerSelect(Flink115SqlInterpreter.java:451)\n\tat org.apache.zeppelin.flink.Flink115SqlInterpreter.callSelect(Flink115SqlInterpreter.java:435)\n\tat org.apache.zeppelin.flink.Flink115SqlInterpreter.callOperation(Flink115SqlInterpreter.java:290)\n\tat org.apache.zeppelin.flink.Flink115SqlInterpreter.runSqlList(Flink115SqlInterpreter.java:236)\n\tat org.apache.zeppelin.flink.Flink115Shims.runSqlList(Flink115Shims.java:315)\n\tat org.apache.zeppelin.flink.FlinkStreamSqlInterpreter.runSqlList(FlinkStreamSqlInterpreter.java:103)\n\tat org.apache.zeppelin.flink.FlinkSqlInterpreter.internalInterpret(FlinkSqlInterpreter.java:63)\n\tat org.apache.zeppelin.interpreter.AbstractInterpreter.interpret(AbstractInterpreter.java:55)\n\tat org.apache.zeppelin.interpreter.LazyOpenInterpreter.interpret(LazyOpenInterpreter.java:110)\n\tat org.apache.zeppelin.interpreter.remote.RemoteInterpreterServer$InterpretJob.jobRun(RemoteInterpreterServer.java:860)\n\tat org.apache.zeppelin.interpreter.remote.RemoteInterpreterServer$InterpretJob.jobRun(RemoteInterpreterServer.java:752)\n\tat org.apache.zeppelin.scheduler.Job.run(Job.java:172)\n\tat org.apache.zeppelin.scheduler.AbstractScheduler.runJob(AbstractScheduler.java:132)\n\tat org.apache.zeppelin.scheduler.ParallelScheduler.lambda$runJobInScheduler$0(ParallelScheduler.java:46)\n\tat java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1128)\n\tat java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:628)\n\tat java.base/java.lang.Thread.run(Thread.java:829)\nCaused by: java.io.IOException: Fail to run stream sql job\n\tat org.apache.zeppelin.flink.sql.AbstractStreamSqlJob.run(AbstractStreamSqlJob.java:165)\n\tat org.apache.zeppelin.flink.sql.AbstractStreamSqlJob.run(AbstractStreamSqlJob.java:109)\n\tat org.apache.zeppelin.flink.FlinkStreamSqlInterpreter.callInnerSelect(FlinkStreamSqlInterpreter.java:92)\n\t... 18 more\nCaused by: java.util.concurrent.ExecutionException: org.apache.flink.table.api.TableException: Failed to wait job finish\n\tat java.base/java.util.concurrent.CompletableFuture.reportGet(CompletableFuture.java:395)\n\tat java.base/java.util.concurrent.CompletableFuture.get(CompletableFuture.java:1999)\n\tat org.apache.flink.table.api.internal.TableResultImpl.awaitInternal(TableResultImpl.java:118)\n\tat org.apache.flink.table.api.internal.TableResultImpl.await(TableResultImpl.java:81)\n\tat org.apache.zeppelin.flink.sql.AbstractStreamSqlJob.run(AbstractStreamSqlJob.java:154)\n\t... 20 more\nCaused by: org.apache.flink.table.api.TableException: Failed to wait job finish\n\tat org.apache.flink.table.api.internal.InsertResultProvider.hasNext(InsertResultProvider.java:85)\n\tat org.apache.flink.table.api.internal.InsertResultProvider.isFirstRowReady(InsertResultProvider.java:71)\n\tat org.apache.flink.table.api.internal.TableResultImpl.lambda$awaitInternal$1(TableResultImpl.java:105)\n\tat java.base/java.util.concurrent.CompletableFuture$AsyncRun.run(CompletableFuture.java:1736)\n\t... 3 more\nCaused by: java.util.concurrent.ExecutionException: org.apache.flink.client.program.ProgramInvocationException: Job failed (JobID: 6204c00c2645de0be07deb7bf7890f07)\n\tat java.base/java.util.concurrent.CompletableFuture.reportGet(CompletableFuture.java:395)\n\tat java.base/java.util.concurrent.CompletableFuture.get(CompletableFuture.java:1999)\n\tat org.apache.flink.table.api.internal.InsertResultProvider.hasNext(InsertResultProvider.java:83)\n\t... 6 more\nCaused by: org.apache.flink.client.program.ProgramInvocationException: Job failed (JobID: 6204c00c2645de0be07deb7bf7890f07)\n\tat org.apache.flink.client.deployment.ClusterClientJobClientAdapter.lambda$getJobExecutionResult$6(ClusterClientJobClientAdapter.java:130)\n\tat java.base/java.util.concurrent.CompletableFuture$UniApply.tryFire(CompletableFuture.java:642)\n\tat java.base/java.util.concurrent.CompletableFuture.postComplete(CompletableFuture.java:506)\n\tat java.base/java.util.concurrent.CompletableFuture.complete(CompletableFuture.java:2073)\n\tat org.apache.flink.util.concurrent.FutureUtils.lambda$retryOperationWithDelay$9(FutureUtils.java:403)\n\tat java.base/java.util.concurrent.CompletableFuture.uniWhenComplete(CompletableFuture.java:859)\n\tat java.base/java.util.concurrent.CompletableFuture$UniWhenComplete.tryFire(CompletableFuture.java:837)\n\tat java.base/java.util.concurrent.CompletableFuture.postComplete(CompletableFuture.java:506)\n\tat java.base/java.util.concurrent.CompletableFuture.complete(CompletableFuture.java:2073)\n\tat org.apache.flink.client.program.rest.RestClusterClient.lambda$pollResourceAsync$26(RestClusterClient.java:708)\n\tat java.base/java.util.concurrent.CompletableFuture.uniWhenComplete(CompletableFuture.java:859)\n\tat java.base/java.util.concurrent.CompletableFuture$UniWhenComplete.tryFire(CompletableFuture.java:837)\n\tat java.base/java.util.concurrent.CompletableFuture.postComplete(CompletableFuture.java:506)\n\tat java.base/java.util.concurrent.CompletableFuture.complete(CompletableFuture.java:2073)\n\tat org.apache.flink.util.concurrent.FutureUtils.lambda$retryOperationWithDelay$9(FutureUtils.java:403)\n\tat java.base/java.util.concurrent.CompletableFuture.uniWhenComplete(CompletableFuture.java:859)\n\tat java.base/java.util.concurrent.CompletableFuture$UniWhenComplete.tryFire(CompletableFuture.java:837)\n\tat java.base/java.util.concurrent.CompletableFuture.postComplete(CompletableFuture.java:506)\n\tat java.base/java.util.concurrent.CompletableFuture.postFire(CompletableFuture.java:610)\n\tat java.base/java.util.concurrent.CompletableFuture$UniCompose.tryFire(CompletableFuture.java:1085)\n\tat java.base/java.util.concurrent.CompletableFuture$Completion.run(CompletableFuture.java:478)\n\t... 3 more\nCaused by: org.apache.flink.runtime.client.JobExecutionException: Job execution failed.\n\tat org.apache.flink.runtime.jobmaster.JobResult.toJobExecutionResult(JobResult.java:144)\n\tat org.apache.flink.client.deployment.ClusterClientJobClientAdapter.lambda$getJobExecutionResult$6(ClusterClientJobClientAdapter.java:128)\n\t... 23 more\nCaused by: org.apache.flink.runtime.JobException: Recovery is suppressed by NoRestartBackoffTimeStrategy\n\tat org.apache.flink.runtime.executiongraph.failover.flip1.ExecutionFailureHandler.handleFailure(ExecutionFailureHandler.java:138)\n\tat org.apache.flink.runtime.executiongraph.failover.flip1.ExecutionFailureHandler.getFailureHandlingResult(ExecutionFailureHandler.java:82)\n\tat org.apache.flink.runtime.scheduler.DefaultScheduler.handleTaskFailure(DefaultScheduler.java:309)\n\tat org.apache.flink.runtime.scheduler.DefaultScheduler.maybeHandleTaskFailure(DefaultScheduler.java:299)\n\tat org.apache.flink.runtime.scheduler.DefaultScheduler.updateTaskExecutionStateInternal(DefaultScheduler.java:290)\n\tat org.apache.flink.runtime.scheduler.SchedulerBase.updateTaskExecutionState(SchedulerBase.java:788)\n\tat org.apache.flink.runtime.scheduler.SchedulerNG.updateTaskExecutionState(SchedulerNG.java:79)\n\tat org.apache.flink.runtime.jobmaster.JobMaster.updateTaskExecutionState(JobMaster.java:452)\n\tat jdk.internal.reflect.GeneratedMethodAccessor114.invoke(Unknown Source)\n\tat java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)\n\tat java.base/java.lang.reflect.Method.invoke(Method.java:566)\n\tat org.apache.flink.runtime.rpc.akka.AkkaRpcActor.lambda$handleRpcInvocation$1(AkkaRpcActor.java:304)\n\tat org.apache.flink.runtime.concurrent.akka.ClassLoadingUtils.runWithContextClassLoader(ClassLoadingUtils.java:83)\n\tat org.apache.flink.runtime.rpc.akka.AkkaRpcActor.handleRpcInvocation(AkkaRpcActor.java:302)\n\tat org.apache.flink.runtime.rpc.akka.AkkaRpcActor.handleRpcMessage(AkkaRpcActor.java:217)\n\tat org.apache.flink.runtime.rpc.akka.FencedAkkaRpcActor.handleRpcMessage(FencedAkkaRpcActor.java:78)\n\tat org.apache.flink.runtime.rpc.akka.AkkaRpcActor.handleMessage(AkkaRpcActor.java:163)\n\tat akka.japi.pf.UnitCaseStatement.apply(CaseStatements.scala:24)\n\tat akka.japi.pf.UnitCaseStatement.apply(CaseStatements.scala:20)\n\tat scala.PartialFunction.applyOrElse(PartialFunction.scala:123)\n\tat scala.PartialFunction.applyOrElse$(PartialFunction.scala:122)\n\tat akka.japi.pf.UnitCaseStatement.applyOrElse(CaseStatements.scala:20)\n\tat scala.PartialFunction$OrElse.applyOrElse(PartialFunction.scala:171)\n\tat scala.PartialFunction$OrElse.applyOrElse(PartialFunction.scala:172)\n\tat scala.PartialFunction$OrElse.applyOrElse(PartialFunction.scala:172)\n\tat akka.actor.Actor.aroundReceive(Actor.scala:537)\n\tat akka.actor.Actor.aroundReceive$(Actor.scala:535)\n\tat akka.actor.AbstractActor.aroundReceive(AbstractActor.scala:220)\n\tat akka.actor.ActorCell.receiveMessage(ActorCell.scala:580)\n\tat akka.actor.ActorCell.invoke(ActorCell.scala:548)\n\tat akka.dispatch.Mailbox.processMailbox(Mailbox.scala:270)\n\tat akka.dispatch.Mailbox.run(Mailbox.scala:231)\n\tat akka.dispatch.Mailbox.exec(Mailbox.scala:243)\n\tat java.base/java.util.concurrent.ForkJoinTask.doExec(ForkJoinTask.java:290)\n\tat java.base/java.util.concurrent.ForkJoinPool$WorkQueue.topLevelExec(ForkJoinPool.java:1020)\n\tat java.base/java.util.concurrent.ForkJoinPool.scan(ForkJoinPool.java:1656)\n\tat java.base/java.util.concurrent.ForkJoinPool.runWorker(ForkJoinPool.java:1594)\n\tat java.base/java.util.concurrent.ForkJoinWorkerThread.run(ForkJoinWorkerThread.java:183)\nCaused by: java.lang.RuntimeException: Retries exceeded for getRecords operation - all 3 retry attempts failed.\n\tat org.apache.flink.streaming.connectors.kinesis.proxy.KinesisProxy.getRecords(KinesisProxy.java:320)\n\tat org.apache.flink.streaming.connectors.kinesis.internals.publisher.polling.PollingRecordPublisher.getRecords(PollingRecordPublisher.java:168)\n\tat org.apache.flink.streaming.connectors.kinesis.internals.publisher.polling.PollingRecordPublisher.run(PollingRecordPublisher.java:113)\n\tat org.apache.flink.streaming.connectors.kinesis.internals.publisher.polling.PollingRecordPublisher.run(PollingRecordPublisher.java:102)\n\tat org.apache.flink.streaming.connectors.kinesis.internals.ShardConsumer.run(ShardConsumer.java:114)\n\tat java.base/java.util.concurrent.Executors$RunnableAdapter.call(Executors.java:515)\n\tat java.base/java.util.concurrent.FutureTask.run(FutureTask.java:264)\n\tat java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1128)\n\tat java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:628)\n\tat java.base/java.lang.Thread.run(Thread.java:829)\n</div>\n        </div>\n    </div>\n</div>\n"
+          }
+        ]
+      },
+      "apps": [],
+      "runtimeInfos": {},
+      "progressUpdateIntervalMs": 500,
+      "jobName": "paragraph_1693284924912_1942174731",
+      "id": "paragraph_1693277997872_1261565603",
+      "dateCreated": "2023-08-29T04:55:24+0000",
+      "status": "READY",
+      "$$hashKey": "object:291"
+    },
+    {
+      "text": "/*\nRun the aggregated query explicitly using a SQL syntax using the HOP function in the GROUP BY section of the SELECT statement. \nTo add the time to the output of the select, use the HOP_ROWTIME function.\n*/",
+      "user": "anonymous",
+      "dateUpdated": "2023-08-29T04:55:24+0000",
+      "progress": 0,
+      "config": {
+        "editorSetting": {
+          "language": "scala",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "colWidth": 12,
+        "editorMode": "ace/mode/scala",
+        "fontSize": 9,
+        "results": {
+          "0": {
+            "graph": {
+              "mode": "multiBarChart",
+              "height": 300,
+              "optionOpen": false,
+              "setting": {
+                "table": {
+                  "tableGridState": {},
+                  "tableColumnTypeState": {
+                    "names": {
+                      "sensor_id": "string",
+                      "current_temperature": "string",
+                      "status": "string",
+                      "event_time": "string"
+                    },
+                    "updated": false
+                  },
+                  "tableOptionSpecHash": "[{\"name\":\"useFilter\",\"valueType\":\"boolean\",\"defaultValue\":false,\"widget\":\"checkbox\",\"description\":\"Enable filter for columns\"},{\"name\":\"showPagination\",\"valueType\":\"boolean\",\"defaultValue\":false,\"widget\":\"checkbox\",\"description\":\"Enable pagination for better navigation\"},{\"name\":\"showAggregationFooter\",\"valueType\":\"boolean\",\"defaultValue\":false,\"widget\":\"checkbox\",\"description\":\"Enable a footer for displaying aggregated values\"}]",
+                  "tableOptionValue": {
+                    "useFilter": false,
+                    "showPagination": false,
+                    "showAggregationFooter": false
+                  },
+                  "updated": false,
+                  "initialized": false
+                },
+                "multiBarChart": {
+                  "rotate": {
+                    "degree": "-45"
+                  },
+                  "xLabelStatus": "default"
+                }
+              },
+              "commonSetting": {},
+              "keys": [
+                {
+                  "name": "sensor_id",
+                  "index": 0,
+                  "aggr": "sum"
+                }
+              ],
+              "groups": [],
+              "values": [
+                {
+                  "name": "current_temperature",
+                  "index": 1,
+                  "aggr": "sum"
+                }
+              ]
+            },
+            "helium": {}
+          }
+        },
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": []
+      },
+      "apps": [],
+      "runtimeInfos": {},
+      "progressUpdateIntervalMs": 500,
+      "jobName": "paragraph_1693284924912_1951990594",
+      "id": "paragraph_1693273842971_1285807402",
+      "dateCreated": "2023-08-29T04:55:24+0000",
+      "status": "READY",
+      "$$hashKey": "object:292"
+    },
+    {
+      "text": "%flink.ssql(type=update)\n\nSELECT sensor_data.status,\n       COUNT(*) AS num,\n       AVG(sensor_data.current_temperature) AS avg_current_temperature,\n       HOP_ROWTIME(event_time, INTERVAL '10' second, INTERVAL '1' minute) as hop_time\n  FROM sensor_data\n GROUP BY HOP(event_time, INTERVAL '10' second, INTERVAL '1' minute), sensor_data.status;\n",
+      "user": "anonymous",
+      "dateUpdated": "2023-08-29T04:55:24+0000",
+      "progress": 0,
+      "config": {
+        "editorSetting": {
+          "language": "sql",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "colWidth": 12,
+        "editorMode": "ace/mode/sql",
+        "fontSize": 9,
+        "results": {
+          "0": {
+            "graph": {
+              "mode": "table",
+              "height": 300,
+              "optionOpen": false,
+              "setting": {
+                "table": {
+                  "tableGridState": {},
+                  "tableColumnTypeState": {
+                    "names": {
+                      "status": "string",
+                      "num": "string",
+                      "avg_current_temperature": "string",
+                      "hop_time": "string"
+                    },
+                    "updated": false
+                  },
+                  "tableOptionSpecHash": "[{\"name\":\"useFilter\",\"valueType\":\"boolean\",\"defaultValue\":false,\"widget\":\"checkbox\",\"description\":\"Enable filter for columns\"},{\"name\":\"showPagination\",\"valueType\":\"boolean\",\"defaultValue\":false,\"widget\":\"checkbox\",\"description\":\"Enable pagination for better navigation\"},{\"name\":\"showAggregationFooter\",\"valueType\":\"boolean\",\"defaultValue\":false,\"widget\":\"checkbox\",\"description\":\"Enable a footer for displaying aggregated values\"}]",
+                  "tableOptionValue": {
+                    "useFilter": false,
+                    "showPagination": false,
+                    "showAggregationFooter": false
+                  },
+                  "updated": false,
+                  "initialized": false
+                }
+              },
+              "commonSetting": {}
+            }
+          }
+        },
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "msg": [
+          {
+            "type": "TABLE",
+            "data": "status\tnum\tavg_current_temperature\thop_time\nFAIL\t2\t120.0\t2023-08-29 12:55:29.999\nFAIL\t4\t120.25\t2023-08-29 12:55:39.999\nFAIL\t6\t116.5\t2023-08-29 12:55:49.999\nFAIL\t10\t102.2\t2023-08-29 12:55:59.999\nFAIL\t11\t100.0\t2023-08-29 12:56:09.999\nFAIL\t12\t100.83333333333333\t2023-08-29 12:56:19.999\nFAIL\t12\t86.66666666666667\t2023-08-29 12:56:29.999\nFAIL\t13\t86.07692307692308\t2023-08-29 12:56:39.999\nFAIL\t12\t83.25\t2023-08-29 12:56:49.999\nFAIL\t10\t85.2\t2023-08-29 12:56:59.999\nFAIL\t14\t91.35714285714286\t2023-08-29 12:57:09.999\nFAIL\t15\t84.4\t2023-08-29 12:57:19.999\nFAIL\t16\t90.4375\t2023-08-29 12:57:29.999\nFAIL\t15\t82.33333333333333\t2023-08-29 12:57:39.999\nFAIL\t17\t83.05882352941177\t2023-08-29 12:57:49.999\nFAIL\t18\t80.94444444444444\t2023-08-29 12:57:59.999\nFAIL\t16\t73.0\t2023-08-29 12:58:09.999\nFAIL\t17\t87.17647058823529\t2023-08-29 12:58:19.999\nFAIL\t19\t87.6842105263158\t2023-08-29 12:58:29.999\nFAIL\t20\t85.4\t2023-08-29 12:58:39.999\nFAIL\t18\t80.61111111111111\t2023-08-29 12:58:49.999\nFAIL\t20\t79.1\t2023-08-29 12:58:59.999\nFAIL\t22\t80.31818181818181\t2023-08-29 12:59:09.999\nFAIL\t23\t80.8695652173913\t2023-08-29 12:59:19.999\nFAIL\t24\t85.25\t2023-08-29 12:59:29.999\nFAIL\t27\t90.18518518518519\t2023-08-29 12:59:39.999\nFAIL\t30\t90.03333333333333\t2023-08-29 12:59:49.999\nFAIL\t28\t95.28571428571429\t2023-08-29 12:59:59.999\nFAIL\t26\t95.46153846153847\t2023-08-29 13:00:09.999\nFAIL\t26\t90.3076923076923\t2023-08-29 13:00:19.999\nFAIL\t25\t83.92\t2023-08-29 13:00:29.999\nFAIL\t24\t82.91666666666667\t2023-08-29 13:00:39.999\nFAIL\t22\t88.04545454545455\t2023-08-29 13:00:49.999\nFAIL\t23\t87.08695652173913\t2023-08-29 13:00:59.999\nFAIL\t25\t90.84\t2023-08-29 13:01:09.999\nFAIL\t24\t91.54166666666667\t2023-08-29 13:01:19.999\nFAIL\t23\t96.04347826086956\t2023-08-29 13:01:29.999\nFAIL\t24\t98.875\t2023-08-29 13:01:39.999\nFAIL\t24\t96.66666666666667\t2023-08-29 13:01:49.999\nFAIL\t23\t92.04347826086956\t2023-08-29 13:01:59.999\nFAIL\t21\t90.23809523809524\t2023-08-29 13:02:09.999\nFAIL\t23\t84.8695652173913\t2023-08-29 13:02:19.999\nFAIL\t23\t89.08695652173913\t2023-08-29 13:02:29.999\nFAIL\t21\t89.71428571428571\t2023-08-29 13:02:39.999\nFAIL\t24\t85.625\t2023-08-29 13:02:49.999\nFAIL\t22\t89.22727272727273\t2023-08-29 13:02:59.999\nFAIL\t24\t88.29166666666667\t2023-08-29 13:03:09.999\nFAIL\t23\t95.3913043478261\t2023-08-29 13:03:19.999\nFAIL\t25\t89.4\t2023-08-29 13:03:29.999\nFAIL\t22\t85.77272727272727\t2023-08-29 13:03:39.999\nFAIL\t21\t89.19047619047619\t2023-08-29 13:03:49.999\nFAIL\t25\t82.04\t2023-08-29 13:03:59.999\nFAIL\t21\t82.19047619047619\t2023-08-29 13:04:09.999\nFAIL\t22\t82.0909090909091\t2023-08-29 13:04:19.999\nFAIL\t18\t74.5\t2023-08-29 13:04:29.999\nFAIL\t20\t76.5\t2023-08-29 13:04:39.999\nFAIL\t18\t73.05555555555556\t2023-08-29 13:04:49.999\nFAIL\t15\t82.8\t2023-08-29 13:04:59.999\nFAIL\t19\t80.42105263157895\t2023-08-29 13:05:09.999\nFAIL\t17\t72.82352941176471\t2023-08-29 13:05:19.999\nFAIL\t19\t76.63157894736842\t2023-08-29 13:05:29.999\nFAIL\t21\t73.19047619047619\t2023-08-29 13:05:39.999\nFAIL\t23\t79.08695652173913\t2023-08-29 13:05:49.999\nFAIL\t24\t79.125\t2023-08-29 13:05:59.999\nFAIL\t23\t73.95652173913044\t2023-08-29 13:06:09.999\nFAIL\t25\t75.76\t2023-08-29 13:06:19.999\nFAIL\t22\t76.4090909090909\t2023-08-29 13:06:29.999\nFAIL\t19\t78.05263157894737\t2023-08-29 13:06:39.999\nFAIL\t20\t75.0\t2023-08-29 13:06:49.999\nFAIL\t22\t70.22727272727273\t2023-08-29 13:06:59.999\nFAIL\t21\t75.23809523809524\t2023-08-29 13:07:09.999\nFAIL\t20\t75.75\t2023-08-29 13:07:19.999\nFAIL\t24\t73.20833333333333\t2023-08-29 13:07:29.999\nFAIL\t22\t72.86363636363636\t2023-08-29 13:07:39.999\nFAIL\t21\t69.0\t2023-08-29 13:07:49.999\nFAIL\t19\t69.0\t2023-08-29 13:07:59.999\nFAIL\t18\t67.83333333333333\t2023-08-29 13:08:09.999\nFAIL\t18\t60.166666666666664\t2023-08-29 13:08:19.999\nFAIL\t19\t63.21052631578947\t2023-08-29 13:08:29.999\nFAIL\t22\t61.27272727272727\t2023-08-29 13:08:39.999\nFAIL\t23\t66.82608695652173\t2023-08-29 13:08:49.999\nFAIL\t24\t70.41666666666667\t2023-08-29 13:08:59.999\nFAIL\t26\t71.34615384615384\t2023-08-29 13:09:09.999\nFAIL\t24\t77.54166666666667\t2023-08-29 13:09:19.999\nFAIL\t23\t82.21739130434783\t2023-08-29 13:09:29.999\nFAIL\t22\t82.22727272727273\t2023-08-29 13:09:39.999\nFAIL\t20\t81.0\t2023-08-29 13:09:49.999\nFAIL\t17\t80.11764705882354\t2023-08-29 13:09:59.999\nFAIL\t18\t82.05555555555556\t2023-08-29 13:10:09.999\nFAIL\t19\t80.63157894736842\t2023-08-29 13:10:19.999\nFAIL\t17\t80.94117647058823\t2023-08-29 13:10:29.999\nFAIL\t16\t89.0\t2023-08-29 13:10:39.999\nFAIL\t18\t88.44444444444444\t2023-08-29 13:10:49.999\nFAIL\t21\t79.33333333333333\t2023-08-29 13:10:59.999\nFAIL\t19\t80.36842105263158\t2023-08-29 13:11:09.999\nFAIL\t21\t81.23809523809524\t2023-08-29 13:11:19.999\nFAIL\t21\t84.66666666666667\t2023-08-29 13:11:29.999\nFAIL\t22\t80.5\t2023-08-29 13:11:39.999\nFAIL\t21\t77.71428571428571\t2023-08-29 13:11:49.999\nFAIL\t22\t80.95454545454545\t2023-08-29 13:11:59.999\nFAIL\t21\t80.19047619047619\t2023-08-29 13:12:09.999\nFAIL\t20\t81.25\t2023-08-29 13:12:19.999\nFAIL\t20\t72.3\t2023-08-29 13:12:29.999\nFAIL\t21\t75.71428571428571\t2023-08-29 13:12:39.999\nFAIL\t21\t73.04761904761905\t2023-08-29 13:12:49.999\nFAIL\t17\t80.0\t2023-08-29 13:12:59.999\nFAIL\t18\t80.44444444444444\t2023-08-29 13:13:09.999\nFAIL\t17\t73.70588235294117\t2023-08-29 13:13:19.999\nFAIL\t17\t71.47058823529412\t2023-08-29 13:13:29.999\nFAIL\t16\t65.4375\t2023-08-29 13:13:39.999\nFAIL\t13\t67.6923076923077\t2023-08-29 13:13:49.999\nFAIL\t13\t62.84615384615385\t2023-08-29 13:13:59.999\nFAIL\t13\t53.53846153846154\t2023-08-29 13:14:09.999\nFAIL\t12\t57.333333333333336\t2023-08-29 13:14:19.999\nFAIL\t10\t63.4\t2023-08-29 13:14:29.999\nFAIL\t10\t82.6\t2023-08-29 13:14:39.999\nFAIL\t13\t76.84615384615384\t2023-08-29 13:14:49.999\nFAIL\t18\t81.38888888888889\t2023-08-29 13:14:59.999\nFAIL\t17\t85.11764705882354\t2023-08-29 13:15:09.999\nFAIL\t18\t85.27777777777777\t2023-08-29 13:15:19.999\nFAIL\t23\t84.91304347826087\t2023-08-29 13:15:29.999\nFAIL\t24\t76.79166666666667\t2023-08-29 13:15:39.999\nFAIL\t25\t81.08\t2023-08-29 13:15:49.999\nFAIL\t24\t82.125\t2023-08-29 13:15:59.999\nFAIL\t26\t88.8076923076923\t2023-08-29 13:16:09.999\nFAIL\t25\t89.92\t2023-08-29 13:16:19.999\nFAIL\t23\t89.34782608695652\t2023-08-29 13:16:29.999\nFAIL\t21\t93.57142857142857\t2023-08-29 13:16:39.999\nFAIL\t23\t83.78260869565217\t2023-08-29 13:16:49.999\nFAIL\t22\t73.13636363636364\t2023-08-29 13:16:59.999\nFAIL\t23\t70.26086956521739\t2023-08-29 13:17:09.999\nFAIL\t24\t66.41666666666667\t2023-08-29 13:17:19.999\nFAIL\t22\t62.68181818181818\t2023-08-29 13:17:29.999\nFAIL\t24\t59.083333333333336\t2023-08-29 13:17:39.999\nFAIL\t20\t63.85\t2023-08-29 13:17:49.999\nFAIL\t21\t75.23809523809524\t2023-08-29 13:17:59.999\nFAIL\t19\t66.78947368421052\t2023-08-29 13:18:09.999\nFAIL\t19\t73.63157894736842\t2023-08-29 13:18:19.999\nFAIL\t21\t69.66666666666667\t2023-08-29 13:18:29.999\nFAIL\t22\t75.77272727272727\t2023-08-29 13:18:39.999\nFAIL\t22\t71.86363636363636\t2023-08-29 13:18:49.999\nFAIL\t20\t73.5\t2023-08-29 13:18:59.999\nFAIL\t23\t83.1304347826087\t2023-08-29 13:19:09.999\nFAIL\t26\t82.5\t2023-08-29 13:19:19.999\nFAIL\t26\t89.07692307692308\t2023-08-29 13:19:29.999\nFAIL\t25\t89.28\t2023-08-29 13:19:39.999\nFAIL\t29\t87.79310344827586\t2023-08-29 13:19:49.999\nFAIL\t28\t82.17857142857143\t2023-08-29 13:19:59.999\nFAIL\t23\t75.08695652173913\t2023-08-29 13:20:09.999\nFAIL\t21\t65.71428571428571\t2023-08-29 13:20:19.999\nFAIL\t19\t64.63157894736842\t2023-08-29 13:20:29.999\nFAIL\t17\t61.411764705882355\t2023-08-29 13:20:39.999\nFAIL\t14\t64.28571428571429\t2023-08-29 13:20:49.999\nFAIL\t13\t70.3076923076923\t2023-08-29 13:20:59.999\nFAIL\t15\t73.86666666666666\t2023-08-29 13:21:09.999\nFAIL\t15\t90.06666666666666\t2023-08-29 13:21:19.999\nFAIL\t15\t86.8\t2023-08-29 13:21:29.999\nFAIL\t16\t87.9375\t2023-08-29 13:21:39.999\nFAIL\t14\t96.5\t2023-08-29 13:21:49.999\nFAIL\t18\t97.44444444444444\t2023-08-29 13:21:59.999\nFAIL\t18\t99.11111111111111\t2023-08-29 13:22:09.999\nFAIL\t18\t96.44444444444444\t2023-08-29 13:22:19.999\nFAIL\t17\t95.6470588235294\t2023-08-29 13:22:29.999\nFAIL\t18\t99.11111111111111\t2023-08-29 13:22:39.999\nFAIL\t21\t96.57142857142857\t2023-08-29 13:22:49.999\nFAIL\t20\t88.05\t2023-08-29 13:22:59.999\nFAIL\t20\t80.95\t2023-08-29 13:23:09.999\nFAIL\t20\t79.85\t2023-08-29 13:23:19.999\nFAIL\t22\t82.04545454545455\t2023-08-29 13:23:29.999\nFAIL\t21\t79.52380952380952\t2023-08-29 13:23:39.999\nFAIL\t19\t74.21052631578948\t2023-08-29 13:23:49.999\nFAIL\t20\t85.1\t2023-08-29 13:23:59.999\nFAIL\t19\t92.57894736842105\t2023-08-29 13:24:09.999\nFAIL\t19\t91.15789473684211\t2023-08-29 13:24:19.999\nFAIL\t21\t91.0\t2023-08-29 13:24:29.999\nFAIL\t21\t91.95238095238095\t2023-08-29 13:24:39.999\nFAIL\t19\t88.52631578947368\t2023-08-29 13:24:49.999\nFAIL\t18\t81.55555555555556\t2023-08-29 13:24:59.999\nFAIL\t17\t80.82352941176471\t2023-08-29 13:25:09.999\nFAIL\t19\t82.73684210526316\t2023-08-29 13:25:19.999\nFAIL\t18\t86.44444444444444\t2023-08-29 13:25:29.999\nFAIL\t17\t83.6470588235294\t2023-08-29 13:25:39.999\nFAIL\t19\t84.63157894736842\t2023-08-29 13:25:49.999\nFAIL\t18\t84.11111111111111\t2023-08-29 13:25:59.999\nFAIL\t22\t80.13636363636364\t2023-08-29 13:26:09.999\nFAIL\t19\t71.26315789473684\t2023-08-29 13:26:19.999\nFAIL\t16\t67.9375\t2023-08-29 13:26:29.999\nFAIL\t18\t76.77777777777777\t2023-08-29 13:26:39.999\nFAIL\t19\t80.89473684210526\t2023-08-29 13:26:49.999\nFAIL\t19\t78.15789473684211\t2023-08-29 13:26:59.999\nFAIL\t17\t81.58823529411765\t2023-08-29 13:27:09.999\nFAIL\t20\t83.7\t2023-08-29 13:27:19.999\nFAIL\t23\t84.6086956521739\t2023-08-29 13:27:29.999\nFAIL\t21\t76.61904761904762\t2023-08-29 13:27:39.999\nFAIL\t21\t71.47619047619048\t2023-08-29 13:27:49.999\nFAIL\t20\t73.35\t2023-08-29 13:27:59.999\nFAIL\t19\t70.36842105263158\t2023-08-29 13:28:09.999\nFAIL\t17\t70.05882352941177\t2023-08-29 13:28:19.999\nFAIL\t17\t61.588235294117645\t2023-08-29 13:28:29.999\nFAIL\t17\t68.11764705882354\t2023-08-29 13:28:39.999\nFAIL\t15\t70.73333333333333\t2023-08-29 13:28:49.999\nFAIL\t16\t68.375\t2023-08-29 13:28:59.999\nFAIL\t18\t76.77777777777777\t2023-08-29 13:29:09.999\nFAIL\t18\t78.61111111111111\t2023-08-29 13:29:19.999\nFAIL\t17\t83.82352941176471\t2023-08-29 13:29:29.999\nFAIL\t20\t87.15\t2023-08-29 13:29:39.999\nFAIL\t21\t89.23809523809524\t2023-08-29 13:29:49.999\nFAIL\t22\t87.27272727272727\t2023-08-29 13:29:59.999\nFAIL\t22\t83.5\t2023-08-29 13:30:09.999\nFAIL\t22\t82.9090909090909\t2023-08-29 13:30:19.999\nFAIL\t21\t78.04761904761905\t2023-08-29 13:30:29.999\nFAIL\t21\t71.23809523809524\t2023-08-29 13:30:39.999\nFAIL\t22\t74.68181818181819\t2023-08-29 13:30:49.999\nFAIL\t20\t81.75\t2023-08-29 13:30:59.999\nFAIL\t18\t77.77777777777777\t2023-08-29 13:31:09.999\nFAIL\t18\t73.5\t2023-08-29 13:31:19.999\nFAIL\t19\t80.73684210526316\t2023-08-29 13:31:29.999\nFAIL\t17\t85.94117647058823\t2023-08-29 13:31:39.999\nFAIL\t16\t73.25\t2023-08-29 13:31:49.999\nFAIL\t19\t70.73684210526316\t2023-08-29 13:31:59.999\nFAIL\t22\t78.5909090909091\t2023-08-29 13:32:09.999\nFAIL\t23\t82.0\t2023-08-29 13:32:19.999\nFAIL\t23\t82.43478260869566\t2023-08-29 13:32:29.999\nFAIL\t22\t80.68181818181819\t2023-08-29 13:32:39.999\nFAIL\t24\t89.875\t2023-08-29 13:32:49.999\nFAIL\t24\t86.41666666666667\t2023-08-29 13:32:59.999\nFAIL\t23\t79.43478260869566\t2023-08-29 13:33:09.999\nFAIL\t21\t83.95238095238095\t2023-08-29 13:33:19.999\nFAIL\t18\t80.83333333333333\t2023-08-29 13:33:29.999\nFAIL\t20\t77.85\t2023-08-29 13:33:39.999\nFAIL\t17\t69.41176470588235\t2023-08-29 13:33:49.999\nFAIL\t15\t68.86666666666666\t2023-08-29 13:33:59.999\nFAIL\t16\t73.8125\t2023-08-29 13:34:09.999\nFAIL\t16\t68.75\t2023-08-29 13:34:19.999\nFAIL\t17\t66.6470588235294\t2023-08-29 13:34:29.999\nFAIL\t15\t65.93333333333334\t2023-08-29 13:34:39.999\nFAIL\t18\t73.27777777777777\t2023-08-29 13:34:49.999\nFAIL\t19\t79.26315789473684\t2023-08-29 13:34:59.999\nFAIL\t16\t81.9375\t2023-08-29 13:35:09.999\nFAIL\t13\t82.53846153846153\t2023-08-29 13:35:19.999\nFAIL\t14\t85.92857142857143\t2023-08-29 13:35:29.999\nFAIL\t16\t87.4375\t2023-08-29 13:35:39.999\nFAIL\t15\t85.13333333333334\t2023-08-29 13:35:49.999\nFAIL\t11\t84.27272727272727\t2023-08-29 13:35:59.999\nFAIL\t12\t83.66666666666667\t2023-08-29 13:36:09.999\nFAIL\t17\t85.3529411764706\t2023-08-29 13:36:19.999\nFAIL\t19\t87.6842105263158\t2023-08-29 13:36:29.999\nFAIL\t19\t89.47368421052632\t2023-08-29 13:36:39.999\nFAIL\t18\t91.38888888888889\t2023-08-29 13:36:49.999\nFAIL\t21\t83.42857142857143\t2023-08-29 13:36:59.999\nFAIL\t21\t85.85714285714286\t2023-08-29 13:37:09.999\nFAIL\t18\t83.88888888888889\t2023-08-29 13:37:19.999\nFAIL\t15\t83.0\t2023-08-29 13:37:29.999\nFAIL\t14\t80.07142857142857\t2023-08-29 13:37:39.999\nFAIL\t12\t74.0\t2023-08-29 13:37:49.999\nFAIL\t12\t79.16666666666667\t2023-08-29 13:37:59.999\nFAIL\t11\t73.0\t2023-08-29 13:38:09.999\nFAIL\t13\t56.38461538461539\t2023-08-29 13:38:19.999\nFAIL\t13\t58.61538461538461\t2023-08-29 13:38:29.999\nFAIL\t18\t62.5\t2023-08-29 13:38:39.999\nFAIL\t21\t61.80952380952381\t2023-08-29 13:38:49.999\nFAIL\t22\t75.04545454545455\t2023-08-29 13:38:59.999\nFAIL\t24\t85.5\t2023-08-29 13:39:09.999\nFAIL\t24\t98.16666666666667\t2023-08-29 13:39:19.999\nFAIL\t25\t94.8\t2023-08-29 13:39:29.999\nFAIL\t23\t101.08695652173913\t2023-08-29 13:39:39.999\nFAIL\t20\t108.1\t2023-08-29 13:39:49.999\nFAIL\t20\t99.5\t2023-08-29 13:39:59.999\nFAIL\t19\t88.73684210526316\t2023-08-29 13:40:09.999\nFAIL\t18\t89.38888888888889\t2023-08-29 13:40:19.999\nFAIL\t20\t89.85\t2023-08-29 13:40:29.999\nFAIL\t18\t93.27777777777777\t2023-08-29 13:40:39.999\nFAIL\t20\t90.5\t2023-08-29 13:40:49.999\nFAIL\t19\t96.84210526315789\t2023-08-29 13:40:59.999\nFAIL\t17\t96.23529411764706\t2023-08-29 13:41:09.999\nFAIL\t18\t90.0\t2023-08-29 13:41:19.999\nFAIL\t19\t90.0\t2023-08-29 13:41:29.999\nFAIL\t17\t79.11764705882354\t2023-08-29 13:41:39.999\nFAIL\t18\t84.16666666666667\t2023-08-29 13:41:49.999\nFAIL\t20\t78.2\t2023-08-29 13:41:59.999\nFAIL\t21\t78.38095238095238\t2023-08-29 13:42:09.999\nFAIL\t19\t72.47368421052632\t2023-08-29 13:42:19.999\nFAIL\t19\t67.78947368421052\t2023-08-29 13:42:29.999\nFAIL\t21\t73.33333333333333\t2023-08-29 13:42:39.999\nFAIL\t20\t74.0\t2023-08-29 13:42:49.999\nFAIL\t18\t77.11111111111111\t2023-08-29 13:42:59.999\nFAIL\t20\t81.2\t2023-08-29 13:43:09.999\nFAIL\t21\t93.52380952380952\t2023-08-29 13:43:19.999\nFAIL\t19\t96.42105263157895\t2023-08-29 13:43:29.999\nFAIL\t19\t93.10526315789474\t2023-08-29 13:43:39.999\nFAIL\t20\t89.25\t2023-08-29 13:43:49.999\nFAIL\t19\t86.10526315789474\t2023-08-29 13:43:59.999\nFAIL\t18\t89.27777777777777\t2023-08-29 13:44:09.999\nFAIL\t17\t80.94117647058823\t2023-08-29 13:44:19.999\nFAIL\t17\t78.0\t2023-08-29 13:44:29.999\nFAIL\t17\t80.94117647058823\t2023-08-29 13:44:39.999\nFAIL\t15\t80.8\t2023-08-29 13:44:49.999\nFAIL\t16\t82.375\t2023-08-29 13:44:59.999\nFAIL\t18\t76.61111111111111\t2023-08-29 13:45:09.999\nFAIL\t20\t80.3\t2023-08-29 13:45:19.999\nFAIL\t22\t76.81818181818181\t2023-08-29 13:45:29.999\nFAIL\t22\t76.54545454545455\t2023-08-29 13:45:39.999\nFAIL\t26\t74.15384615384616\t2023-08-29 13:45:49.999\nFAIL\t26\t77.57692307692308\t2023-08-29 13:45:59.999\nFAIL\t25\t86.48\t2023-08-29 13:46:09.999\nFAIL\t24\t81.54166666666667\t2023-08-29 13:46:19.999\nFAIL\t21\t87.57142857142857\t2023-08-29 13:46:29.999\nFAIL\t21\t86.04761904761905\t2023-08-29 13:46:39.999\nOK\t2\t85.5\t2023-08-29 12:55:19.999\nOK\t5\t88.8\t2023-08-29 12:55:29.999\nOK\t8\t96.625\t2023-08-29 12:55:39.999\nOK\t15\t101.93333333333334\t2023-08-29 12:55:49.999\nOK\t19\t102.3157894736842\t2023-08-29 12:55:59.999\nOK\t20\t103.6\t2023-08-29 12:56:09.999\nOK\t23\t98.0\t2023-08-29 12:56:19.999\nOK\t24\t96.04166666666667\t2023-08-29 12:56:29.999\nOK\t23\t96.1304347826087\t2023-08-29 12:56:39.999\nOK\t21\t91.0\t2023-08-29 12:56:49.999\nOK\t20\t88.85\t2023-08-29 12:56:59.999\nOK\t21\t86.71428571428571\t2023-08-29 12:57:09.999\nOK\t20\t84.9\t2023-08-29 12:57:19.999\nOK\t19\t86.42105263157895\t2023-08-29 12:57:29.999\nOK\t23\t86.0\t2023-08-29 12:57:39.999\nOK\t20\t85.65\t2023-08-29 12:57:49.999\nOK\t21\t81.0952380952381\t2023-08-29 12:57:59.999\nOK\t24\t82.66666666666667\t2023-08-29 12:58:09.999\nOK\t24\t82.41666666666667\t2023-08-29 12:58:19.999\nOK\t23\t77.6086956521739\t2023-08-29 12:58:29.999\nOK\t19\t70.94736842105263\t2023-08-29 12:58:39.999\nOK\t23\t68.95652173913044\t2023-08-29 12:58:49.999\nOK\t21\t65.95238095238095\t2023-08-29 12:58:59.999\nOK\t18\t63.27777777777778\t2023-08-29 12:59:09.999\nOK\t19\t65.21052631578948\t2023-08-29 12:59:19.999\nOK\t19\t71.78947368421052\t2023-08-29 12:59:29.999\nOK\t20\t75.15\t2023-08-29 12:59:39.999\nOK\t16\t73.75\t2023-08-29 12:59:49.999\nOK\t16\t75.75\t2023-08-29 12:59:59.999\nOK\t19\t81.84210526315789\t2023-08-29 13:00:09.999\nOK\t16\t88.75\t2023-08-29 13:00:19.999\nOK\t15\t87.4\t2023-08-29 13:00:29.999\nOK\t17\t92.3529411764706\t2023-08-29 13:00:39.999\nOK\t22\t88.9090909090909\t2023-08-29 13:00:49.999\nOK\t22\t91.5909090909091\t2023-08-29 13:00:59.999\nOK\t19\t85.94736842105263\t2023-08-29 13:01:09.999\nOK\t22\t91.95454545454545\t2023-08-29 13:01:19.999\nOK\t24\t96.58333333333333\t2023-08-29 13:01:29.999\nOK\t21\t92.71428571428571\t2023-08-29 13:01:39.999\nOK\t17\t103.05882352941177\t2023-08-29 13:01:49.999\nOK\t16\t100.375\t2023-08-29 13:01:59.999\nOK\t16\t99.125\t2023-08-29 13:02:09.999\nOK\t14\t84.92857142857143\t2023-08-29 13:02:19.999\nOK\t13\t71.92307692307692\t2023-08-29 13:02:29.999\nOK\t11\t70.36363636363636\t2023-08-29 13:02:39.999\nOK\t11\t69.0909090909091\t2023-08-29 13:02:49.999\nOK\t16\t76.625\t2023-08-29 13:02:59.999\nOK\t15\t73.93333333333334\t2023-08-29 13:03:09.999\nOK\t14\t74.0\t2023-08-29 13:03:19.999\nOK\t12\t75.33333333333333\t2023-08-29 13:03:29.999\nOK\t15\t73.93333333333334\t2023-08-29 13:03:39.999\nOK\t14\t72.0\t2023-08-29 13:03:49.999\nOK\t11\t75.36363636363636\t2023-08-29 13:03:59.999\nOK\t13\t85.84615384615384\t2023-08-29 13:04:09.999\nOK\t14\t88.85714285714286\t2023-08-29 13:04:19.999\nOK\t18\t91.44444444444444\t2023-08-29 13:04:29.999\nOK\t16\t99.3125\t2023-08-29 13:04:39.999\nOK\t19\t90.89473684210526\t2023-08-29 13:04:49.999\nOK\t17\t90.0\t2023-08-29 13:04:59.999\nOK\t15\t88.06666666666666\t2023-08-29 13:05:09.999\nOK\t14\t85.64285714285714\t2023-08-29 13:05:19.999\nOK\t13\t79.38461538461539\t2023-08-29 13:05:29.999\nOK\t13\t74.23076923076923\t2023-08-29 13:05:39.999\nOK\t11\t79.18181818181819\t2023-08-29 13:05:49.999\nOK\t11\t81.81818181818181\t2023-08-29 13:05:59.999\nOK\t14\t82.78571428571429\t2023-08-29 13:06:09.999\nOK\t15\t92.26666666666667\t2023-08-29 13:06:19.999\nOK\t15\t94.26666666666667\t2023-08-29 13:06:29.999\nOK\t16\t92.5\t2023-08-29 13:06:39.999\nOK\t14\t95.07142857142857\t2023-08-29 13:06:49.999\nOK\t15\t88.4\t2023-08-29 13:06:59.999\nOK\t13\t82.07692307692308\t2023-08-29 13:07:09.999\nOK\t13\t77.15384615384616\t2023-08-29 13:07:19.999\nOK\t14\t77.14285714285714\t2023-08-29 13:07:29.999\nOK\t16\t78.5\t2023-08-29 13:07:39.999\nOK\t18\t77.33333333333333\t2023-08-29 13:07:49.999\nOK\t21\t80.04761904761905\t2023-08-29 13:07:59.999\nOK\t21\t76.28571428571429\t2023-08-29 13:08:09.999\nOK\t22\t71.04545454545455\t2023-08-29 13:08:19.999\nOK\t21\t68.57142857142857\t2023-08-29 13:08:29.999\nOK\t21\t69.71428571428571\t2023-08-29 13:08:39.999\nOK\t20\t69.0\t2023-08-29 13:08:49.999\nOK\t19\t71.21052631578948\t2023-08-29 13:08:59.999\nOK\t22\t79.13636363636364\t2023-08-29 13:09:09.999\nOK\t21\t78.0\t2023-08-29 13:09:19.999\nOK\t20\t82.15\t2023-08-29 13:09:29.999\nOK\t18\t86.0\t2023-08-29 13:09:39.999\nOK\t21\t83.42857142857143\t2023-08-29 13:09:49.999\nOK\t20\t75.1\t2023-08-29 13:09:59.999\nOK\t16\t69.75\t2023-08-29 13:10:09.999\nOK\t18\t83.83333333333333\t2023-08-29 13:10:19.999\nOK\t18\t82.0\t2023-08-29 13:10:29.999\nOK\t19\t74.57894736842105\t2023-08-29 13:10:39.999\nOK\t16\t75.0625\t2023-08-29 13:10:49.999\nOK\t17\t80.0\t2023-08-29 13:10:59.999\nOK\t18\t83.44444444444444\t2023-08-29 13:11:09.999\nOK\t15\t84.06666666666666\t2023-08-29 13:11:19.999\nOK\t15\t76.13333333333334\t2023-08-29 13:11:29.999\nOK\t18\t89.61111111111111\t2023-08-29 13:11:39.999\nOK\t19\t88.52631578947368\t2023-08-29 13:11:49.999\nOK\t16\t93.5\t2023-08-29 13:11:59.999\nOK\t18\t95.77777777777777\t2023-08-29 13:12:09.999\nOK\t20\t83.25\t2023-08-29 13:12:19.999\nOK\t22\t92.77272727272727\t2023-08-29 13:12:29.999\nOK\t19\t79.78947368421052\t2023-08-29 13:12:39.999\nOK\t18\t80.27777777777777\t2023-08-29 13:12:49.999\nOK\t22\t73.27272727272727\t2023-08-29 13:12:59.999\nOK\t21\t73.0952380952381\t2023-08-29 13:13:09.999\nOK\t21\t79.57142857142857\t2023-08-29 13:13:19.999\nOK\t22\t78.18181818181819\t2023-08-29 13:13:29.999\nOK\t23\t83.30434782608695\t2023-08-29 13:13:39.999\nOK\t26\t81.1923076923077\t2023-08-29 13:13:49.999\nOK\t25\t84.32\t2023-08-29 13:13:59.999\nOK\t27\t78.33333333333333\t2023-08-29 13:14:09.999\nOK\t25\t71.8\t2023-08-29 13:14:19.999\nOK\t23\t67.43478260869566\t2023-08-29 13:14:29.999\nOK\t23\t68.21739130434783\t2023-08-29 13:14:39.999\nOK\t22\t71.54545454545455\t2023-08-29 13:14:49.999\nOK\t19\t75.3157894736842\t2023-08-29 13:14:59.999\nOK\t20\t75.95\t2023-08-29 13:15:09.999\nOK\t20\t84.6\t2023-08-29 13:15:19.999\nOK\t20\t81.65\t2023-08-29 13:15:29.999\nOK\t18\t81.05555555555556\t2023-08-29 13:15:39.999\nOK\t16\t81.9375\t2023-08-29 13:15:49.999\nOK\t18\t76.72222222222223\t2023-08-29 13:15:59.999\nOK\t14\t77.92857142857143\t2023-08-29 13:16:09.999\nOK\t16\t81.625\t2023-08-29 13:16:19.999\nOK\t18\t92.27777777777777\t2023-08-29 13:16:29.999\nOK\t20\t90.55\t2023-08-29 13:16:39.999\nOK\t19\t91.47368421052632\t2023-08-29 13:16:49.999\nOK\t19\t94.36842105263158\t2023-08-29 13:16:59.999\nOK\t19\t99.94736842105263\t2023-08-29 13:17:09.999\nOK\t17\t97.6470588235294\t2023-08-29 13:17:19.999\nOK\t14\t93.57142857142857\t2023-08-29 13:17:29.999\nOK\t14\t94.57142857142857\t2023-08-29 13:17:39.999\nOK\t18\t99.88888888888889\t2023-08-29 13:17:49.999\nOK\t16\t104.5625\t2023-08-29 13:17:59.999\nOK\t16\t101.125\t2023-08-29 13:18:09.999\nOK\t18\t95.27777777777777\t2023-08-29 13:18:19.999\nOK\t19\t94.63157894736842\t2023-08-29 13:18:29.999\nOK\t17\t102.11764705882354\t2023-08-29 13:18:39.999\nOK\t15\t95.73333333333333\t2023-08-29 13:18:49.999\nOK\t17\t95.0\t2023-08-29 13:18:59.999\nOK\t18\t87.55555555555556\t2023-08-29 13:19:09.999\nOK\t17\t87.3529411764706\t2023-08-29 13:19:19.999\nOK\t15\t83.06666666666666\t2023-08-29 13:19:29.999\nOK\t15\t69.86666666666666\t2023-08-29 13:19:39.999\nOK\t14\t63.42857142857143\t2023-08-29 13:19:49.999\nOK\t16\t55.5625\t2023-08-29 13:19:59.999\nOK\t17\t69.70588235294117\t2023-08-29 13:20:09.999\nOK\t20\t75.45\t2023-08-29 13:20:19.999\nOK\t21\t78.38095238095238\t2023-08-29 13:20:29.999\nOK\t23\t84.91304347826087\t2023-08-29 13:20:39.999\nOK\t24\t88.79166666666667\t2023-08-29 13:20:49.999\nOK\t25\t91.6\t2023-08-29 13:20:59.999\nOK\t27\t92.07407407407408\t2023-08-29 13:21:09.999\nOK\t22\t93.5\t2023-08-29 13:21:19.999\nOK\t24\t91.45833333333333\t2023-08-29 13:21:29.999\nOK\t23\t88.47826086956522\t2023-08-29 13:21:39.999\nOK\t25\t80.2\t2023-08-29 13:21:49.999\nOK\t20\t77.3\t2023-08-29 13:21:59.999\nOK\t16\t64.0\t2023-08-29 13:22:09.999\nOK\t19\t68.26315789473684\t2023-08-29 13:22:19.999\nOK\t17\t67.58823529411765\t2023-08-29 13:22:29.999\nOK\t19\t76.47368421052632\t2023-08-29 13:22:39.999\nOK\t16\t86.0\t2023-08-29 13:22:49.999\nOK\t18\t85.83333333333333\t2023-08-29 13:22:59.999\nOK\t18\t85.55555555555556\t2023-08-29 13:23:09.999\nOK\t17\t76.6470588235294\t2023-08-29 13:23:19.999\nOK\t19\t80.0\t2023-08-29 13:23:29.999\nOK\t17\t72.29411764705883\t2023-08-29 13:23:39.999\nOK\t18\t67.94444444444444\t2023-08-29 13:23:49.999\nOK\t17\t65.76470588235294\t2023-08-29 13:23:59.999\nOK\t18\t70.5\t2023-08-29 13:24:09.999\nOK\t18\t71.88888888888889\t2023-08-29 13:24:19.999\nOK\t17\t58.0\t2023-08-29 13:24:29.999\nOK\t21\t58.142857142857146\t2023-08-29 13:24:39.999\nOK\t23\t57.91304347826087\t2023-08-29 13:24:49.999\nOK\t22\t60.86363636363637\t2023-08-29 13:24:59.999\nOK\t21\t57.333333333333336\t2023-08-29 13:25:09.999\nOK\t18\t58.333333333333336\t2023-08-29 13:25:19.999\nOK\t20\t77.75\t2023-08-29 13:25:29.999\nOK\t19\t79.6842105263158\t2023-08-29 13:25:39.999\nOK\t18\t85.05555555555556\t2023-08-29 13:25:49.999\nOK\t21\t83.0952380952381\t2023-08-29 13:25:59.999\nOK\t22\t80.0909090909091\t2023-08-29 13:26:09.999\nOK\t27\t79.03703703703704\t2023-08-29 13:26:19.999\nOK\t28\t74.67857142857143\t2023-08-29 13:26:29.999\nOK\t27\t74.66666666666667\t2023-08-29 13:26:39.999\nOK\t25\t77.04\t2023-08-29 13:26:49.999\nOK\t24\t76.70833333333333\t2023-08-29 13:26:59.999\nOK\t25\t81.04\t2023-08-29 13:27:09.999\nOK\t21\t81.0952380952381\t2023-08-29 13:27:19.999\nOK\t21\t72.9047619047619\t2023-08-29 13:27:29.999\nOK\t20\t65.35\t2023-08-29 13:27:39.999\nOK\t22\t65.0\t2023-08-29 13:27:49.999\nOK\t22\t66.4090909090909\t2023-08-29 13:27:59.999\nOK\t20\t59.45\t2023-08-29 13:28:09.999\nOK\t24\t61.791666666666664\t2023-08-29 13:28:19.999\nOK\t20\t65.05\t2023-08-29 13:28:29.999\nOK\t19\t72.10526315789474\t2023-08-29 13:28:39.999\nOK\t20\t67.6\t2023-08-29 13:28:49.999\nOK\t20\t71.6\t2023-08-29 13:28:59.999\nOK\t21\t76.80952380952381\t2023-08-29 13:29:09.999\nOK\t19\t78.89473684210526\t2023-08-29 13:29:19.999\nOK\t18\t74.38888888888889\t2023-08-29 13:29:29.999\nOK\t15\t75.46666666666667\t2023-08-29 13:29:39.999\nOK\t15\t80.4\t2023-08-29 13:29:49.999\nOK\t15\t69.86666666666666\t2023-08-29 13:29:59.999\nOK\t14\t63.357142857142854\t2023-08-29 13:30:09.999\nOK\t14\t62.42857142857143\t2023-08-29 13:30:19.999\nOK\t19\t68.47368421052632\t2023-08-29 13:30:29.999\nOK\t22\t72.04545454545455\t2023-08-29 13:30:39.999\nOK\t20\t70.9\t2023-08-29 13:30:49.999\nOK\t21\t70.57142857142857\t2023-08-29 13:30:59.999\nOK\t20\t74.15\t2023-08-29 13:31:09.999\nOK\t19\t74.3157894736842\t2023-08-29 13:31:19.999\nOK\t17\t73.94117647058823\t2023-08-29 13:31:29.999\nOK\t16\t68.75\t2023-08-29 13:31:39.999\nOK\t17\t78.94117647058823\t2023-08-29 13:31:49.999\nOK\t16\t84.25\t2023-08-29 13:31:59.999\nOK\t17\t81.94117647058823\t2023-08-29 13:32:09.999\nOK\t18\t80.44444444444444\t2023-08-29 13:32:19.999\nOK\t18\t77.77777777777777\t2023-08-29 13:32:29.999\nOK\t21\t78.80952380952381\t2023-08-29 13:32:39.999\nOK\t18\t66.77777777777777\t2023-08-29 13:32:49.999\nOK\t19\t64.73684210526316\t2023-08-29 13:32:59.999\nOK\t19\t66.3157894736842\t2023-08-29 13:33:09.999\nOK\t18\t72.83333333333333\t2023-08-29 13:33:19.999\nOK\t19\t81.6842105263158\t2023-08-29 13:33:29.999\nOK\t20\t87.2\t2023-08-29 13:33:39.999\nOK\t23\t87.52173913043478\t2023-08-29 13:33:49.999\nOK\t22\t92.81818181818181\t2023-08-29 13:33:59.999\nOK\t23\t98.08695652173913\t2023-08-29 13:34:09.999\nOK\t24\t94.875\t2023-08-29 13:34:19.999\nOK\t21\t91.71428571428571\t2023-08-29 13:34:29.999\nOK\t18\t90.11111111111111\t2023-08-29 13:34:39.999\nOK\t15\t93.2\t2023-08-29 13:34:49.999\nOK\t15\t78.86666666666666\t2023-08-29 13:34:59.999\nOK\t19\t75.78947368421052\t2023-08-29 13:35:09.999\nOK\t22\t59.59090909090909\t2023-08-29 13:35:19.999\nOK\t22\t63.31818181818182\t2023-08-29 13:35:29.999\nOK\t21\t61.714285714285715\t2023-08-29 13:35:39.999\nOK\t26\t65.88461538461539\t2023-08-29 13:35:49.999\nOK\t26\t67.84615384615384\t2023-08-29 13:35:59.999\nOK\t23\t64.47826086956522\t2023-08-29 13:36:09.999\nOK\t17\t78.82352941176471\t2023-08-29 13:36:19.999\nOK\t19\t64.78947368421052\t2023-08-29 13:36:29.999\nOK\t20\t64.6\t2023-08-29 13:36:39.999\nOK\t18\t62.77777777777778\t2023-08-29 13:36:49.999\nOK\t18\t60.44444444444444\t2023-08-29 13:36:59.999\nOK\t18\t58.333333333333336\t2023-08-29 13:37:09.999\nOK\t22\t56.95454545454545\t2023-08-29 13:37:19.999\nOK\t22\t63.13636363636363\t2023-08-29 13:37:29.999\nOK\t23\t66.0\t2023-08-29 13:37:39.999\nOK\t21\t66.52380952380952\t2023-08-29 13:37:49.999\nOK\t21\t76.47619047619048\t2023-08-29 13:37:59.999\nOK\t19\t76.0\t2023-08-29 13:38:09.999\nOK\t18\t80.61111111111111\t2023-08-29 13:38:19.999\nOK\t18\t83.33333333333333\t2023-08-29 13:38:29.999\nOK\t15\t81.06666666666666\t2023-08-29 13:38:39.999\nOK\t18\t75.11111111111111\t2023-08-29 13:38:49.999\nOK\t19\t66.52631578947368\t2023-08-29 13:38:59.999\nOK\t21\t65.0\t2023-08-29 13:39:09.999\nOK\t21\t59.523809523809526\t2023-08-29 13:39:19.999\nOK\t18\t56.44444444444444\t2023-08-29 13:39:29.999\nOK\t21\t55.523809523809526\t2023-08-29 13:39:39.999\nOK\t21\t60.095238095238095\t2023-08-29 13:39:49.999\nOK\t19\t64.63157894736842\t2023-08-29 13:39:59.999\nOK\t16\t68.5\t2023-08-29 13:40:09.999\nOK\t20\t78.2\t2023-08-29 13:40:19.999\nOK\t22\t80.95454545454545\t2023-08-29 13:40:29.999\nOK\t22\t90.68181818181819\t2023-08-29 13:40:39.999\nOK\t21\t86.04761904761905\t2023-08-29 13:40:49.999\nOK\t22\t88.5909090909091\t2023-08-29 13:40:59.999\nOK\t25\t87.56\t2023-08-29 13:41:09.999\nOK\t21\t88.71428571428571\t2023-08-29 13:41:19.999\nOK\t20\t82.4\t2023-08-29 13:41:29.999\nOK\t22\t77.04545454545455\t2023-08-29 13:41:39.999\nOK\t21\t87.19047619047619\t2023-08-29 13:41:49.999\nOK\t20\t87.9\t2023-08-29 13:41:59.999\nOK\t21\t83.52380952380952\t2023-08-29 13:42:09.999\nOK\t19\t85.47368421052632\t2023-08-29 13:42:19.999\nOK\t21\t87.61904761904762\t2023-08-29 13:42:29.999\nOK\t18\t92.33333333333333\t2023-08-29 13:42:39.999\nOK\t19\t81.15789473684211\t2023-08-29 13:42:49.999\nOK\t22\t78.63636363636364\t2023-08-29 13:42:59.999\nOK\t20\t79.1\t2023-08-29 13:43:09.999\nOK\t22\t75.4090909090909\t2023-08-29 13:43:19.999\nOK\t22\t79.31818181818181\t2023-08-29 13:43:29.999\nOK\t24\t74.45833333333333\t2023-08-29 13:43:39.999\nOK\t24\t76.08333333333333\t2023-08-29 13:43:49.999\nOK\t21\t73.57142857142857\t2023-08-29 13:43:59.999\nOK\t21\t71.52380952380952\t2023-08-29 13:44:09.999\nOK\t20\t71.2\t2023-08-29 13:44:19.999\nOK\t19\t65.6842105263158\t2023-08-29 13:44:29.999\nOK\t16\t67.875\t2023-08-29 13:44:39.999\nOK\t15\t76.4\t2023-08-29 13:44:49.999\nOK\t18\t77.77777777777777\t2023-08-29 13:44:59.999\nOK\t16\t85.75\t2023-08-29 13:45:09.999\nOK\t17\t94.94117647058823\t2023-08-29 13:45:19.999\nOK\t16\t97.1875\t2023-08-29 13:45:29.999\nOK\t17\t96.76470588235294\t2023-08-29 13:45:39.999\nOK\t17\t89.47058823529412\t2023-08-29 13:45:49.999\nOK\t17\t92.29411764705883\t2023-08-29 13:45:59.999\nOK\t19\t86.63157894736842\t2023-08-29 13:46:09.999\nOK\t18\t78.27777777777777\t2023-08-29 13:46:19.999\nOK\t21\t75.0\t2023-08-29 13:46:29.999\nOK\t21\t74.57142857142857\t2023-08-29 13:46:39.999\nWARN\t5\t77.6\t2023-08-29 12:55:29.999\nWARN\t10\t76.1\t2023-08-29 12:55:39.999\nWARN\t11\t71.54545454545455\t2023-08-29 12:55:49.999\nWARN\t13\t70.84615384615384\t2023-08-29 12:55:59.999\nWARN\t21\t83.85714285714286\t2023-08-29 12:56:09.999\nWARN\t24\t78.375\t2023-08-29 12:56:19.999\nWARN\t23\t78.08695652173913\t2023-08-29 12:56:29.999\nWARN\t23\t78.95652173913044\t2023-08-29 12:56:39.999\nWARN\t26\t78.1923076923077\t2023-08-29 12:56:49.999\nWARN\t29\t78.72413793103448\t2023-08-29 12:56:59.999\nWARN\t24\t70.70833333333333\t2023-08-29 12:57:09.999\nWARN\t25\t79.04\t2023-08-29 12:57:19.999\nWARN\t25\t75.48\t2023-08-29 12:57:29.999\nWARN\t22\t75.72727272727273\t2023-08-29 12:57:39.999\nWARN\t23\t76.26086956521739\t2023-08-29 12:57:49.999\nWARN\t21\t84.0\t2023-08-29 12:57:59.999\nWARN\t20\t85.2\t2023-08-29 12:58:09.999\nWARN\t19\t83.0\t2023-08-29 12:58:19.999\nWARN\t18\t82.0\t2023-08-29 12:58:29.999\nWARN\t21\t84.80952380952381\t2023-08-29 12:58:39.999\nWARN\t19\t85.42105263157895\t2023-08-29 12:58:49.999\nWARN\t18\t77.0\t2023-08-29 12:58:59.999\nWARN\t19\t77.73684210526316\t2023-08-29 12:59:09.999\nWARN\t17\t75.82352941176471\t2023-08-29 12:59:19.999\nWARN\t16\t90.6875\t2023-08-29 12:59:29.999\nWARN\t12\t83.58333333333333\t2023-08-29 12:59:39.999\nWARN\t13\t91.92307692307692\t2023-08-29 12:59:49.999\nWARN\t16\t84.8125\t2023-08-29 12:59:59.999\nWARN\t15\t86.2\t2023-08-29 13:00:09.999\nWARN\t18\t85.22222222222223\t2023-08-29 13:00:19.999\nWARN\t20\t78.4\t2023-08-29 13:00:29.999\nWARN\t19\t81.0\t2023-08-29 13:00:39.999\nWARN\t16\t74.9375\t2023-08-29 13:00:49.999\nWARN\t14\t73.35714285714286\t2023-08-29 13:00:59.999\nWARN\t15\t64.8\t2023-08-29 13:01:09.999\nWARN\t13\t57.07692307692308\t2023-08-29 13:01:19.999\nWARN\t11\t51.54545454545455\t2023-08-29 13:01:29.999\nWARN\t13\t58.30769230769231\t2023-08-29 13:01:39.999\nWARN\t17\t76.58823529411765\t2023-08-29 13:01:49.999\nWARN\t19\t84.15789473684211\t2023-08-29 13:01:59.999\nWARN\t21\t87.57142857142857\t2023-08-29 13:02:09.999\nWARN\t21\t87.71428571428571\t2023-08-29 13:02:19.999\nWARN\t23\t94.78260869565217\t2023-08-29 13:02:29.999\nWARN\t26\t84.23076923076923\t2023-08-29 13:02:39.999\nWARN\t23\t77.43478260869566\t2023-08-29 13:02:49.999\nWARN\t21\t76.9047619047619\t2023-08-29 13:02:59.999\nWARN\t19\t78.42105263157895\t2023-08-29 13:03:09.999\nWARN\t21\t79.52380952380952\t2023-08-29 13:03:19.999\nWARN\t21\t81.28571428571429\t2023-08-29 13:03:29.999\nWARN\t22\t89.54545454545455\t2023-08-29 13:03:39.999\nWARN\t23\t89.0\t2023-08-29 13:03:49.999\nWARN\t22\t87.36363636363636\t2023-08-29 13:03:59.999\nWARN\t25\t92.16\t2023-08-29 13:04:09.999\nWARN\t23\t100.52173913043478\t2023-08-29 13:04:19.999\nWARN\t22\t98.04545454545455\t2023-08-29 13:04:29.999\nWARN\t22\t111.5909090909091\t2023-08-29 13:04:39.999\nWARN\t22\t112.9090909090909\t2023-08-29 13:04:49.999\nWARN\t27\t112.77777777777777\t2023-08-29 13:04:59.999\nWARN\t24\t109.75\t2023-08-29 13:05:09.999\nWARN\t27\t101.37037037037037\t2023-08-29 13:05:19.999\nWARN\t27\t101.51851851851852\t2023-08-29 13:05:29.999\nWARN\t24\t90.91666666666667\t2023-08-29 13:05:39.999\nWARN\t24\t89.75\t2023-08-29 13:05:49.999\nWARN\t23\t92.65217391304348\t2023-08-29 13:05:59.999\nWARN\t22\t86.95454545454545\t2023-08-29 13:06:09.999\nWARN\t19\t90.21052631578948\t2023-08-29 13:06:19.999\nWARN\t21\t89.47619047619048\t2023-08-29 13:06:29.999\nWARN\t24\t88.79166666666667\t2023-08-29 13:06:39.999\nWARN\t25\t86.44\t2023-08-29 13:06:49.999\nWARN\t22\t75.86363636363636\t2023-08-29 13:06:59.999\nWARN\t24\t75.625\t2023-08-29 13:07:09.999\nWARN\t25\t80.04\t2023-08-29 13:07:19.999\nWARN\t21\t71.0\t2023-08-29 13:07:29.999\nWARN\t20\t73.05\t2023-08-29 13:07:39.999\nWARN\t19\t75.57894736842105\t2023-08-29 13:07:49.999\nWARN\t18\t72.5\t2023-08-29 13:07:59.999\nWARN\t19\t82.0\t2023-08-29 13:08:09.999\nWARN\t18\t74.38888888888889\t2023-08-29 13:08:19.999\nWARN\t18\t78.0\t2023-08-29 13:08:29.999\nWARN\t16\t83.3125\t2023-08-29 13:08:39.999\nWARN\t15\t84.13333333333334\t2023-08-29 13:08:49.999\nWARN\t15\t84.26666666666667\t2023-08-29 13:08:59.999\nWARN\t11\t81.36363636363636\t2023-08-29 13:09:09.999\nWARN\t13\t74.23076923076923\t2023-08-29 13:09:19.999\nWARN\t15\t77.6\t2023-08-29 13:09:29.999\nWARN\t18\t65.66666666666667\t2023-08-29 13:09:39.999\nWARN\t18\t64.05555555555556\t2023-08-29 13:09:49.999\nWARN\t21\t72.19047619047619\t2023-08-29 13:09:59.999\nWARN\t24\t71.5\t2023-08-29 13:10:09.999\nWARN\t22\t72.95454545454545\t2023-08-29 13:10:19.999\nWARN\t23\t69.47826086956522\t2023-08-29 13:10:29.999\nWARN\t23\t76.26086956521739\t2023-08-29 13:10:39.999\nWARN\t24\t75.54166666666667\t2023-08-29 13:10:49.999\nWARN\t20\t69.5\t2023-08-29 13:10:59.999\nWARN\t21\t65.57142857142857\t2023-08-29 13:11:09.999\nWARN\t22\t75.68181818181819\t2023-08-29 13:11:19.999\nWARN\t22\t74.45454545454545\t2023-08-29 13:11:29.999\nWARN\t18\t69.38888888888889\t2023-08-29 13:11:39.999\nWARN\t18\t75.27777777777777\t2023-08-29 13:11:49.999\nWARN\t21\t72.71428571428571\t2023-08-29 13:11:59.999\nWARN\t19\t76.26315789473684\t2023-08-29 13:12:09.999\nWARN\t18\t68.94444444444444\t2023-08-29 13:12:19.999\nWARN\t17\t71.47058823529412\t2023-08-29 13:12:29.999\nWARN\t18\t76.38888888888889\t2023-08-29 13:12:39.999\nWARN\t19\t70.05263157894737\t2023-08-29 13:12:49.999\nWARN\t19\t78.47368421052632\t2023-08-29 13:12:59.999\nWARN\t19\t81.73684210526316\t2023-08-29 13:13:09.999\nWARN\t20\t74.55\t2023-08-29 13:13:19.999\nWARN\t19\t73.10526315789474\t2023-08-29 13:13:29.999\nWARN\t20\t74.5\t2023-08-29 13:13:39.999\nWARN\t19\t78.05263157894737\t2023-08-29 13:13:49.999\nWARN\t20\t80.45\t2023-08-29 13:13:59.999\nWARN\t19\t80.15789473684211\t2023-08-29 13:14:09.999\nWARN\t21\t81.71428571428571\t2023-08-29 13:14:19.999\nWARN\t25\t84.16\t2023-08-29 13:14:29.999\nWARN\t25\t88.64\t2023-08-29 13:14:39.999\nWARN\t23\t90.17391304347827\t2023-08-29 13:14:49.999\nWARN\t21\t82.42857142857143\t2023-08-29 13:14:59.999\nWARN\t21\t85.0952380952381\t2023-08-29 13:15:09.999\nWARN\t21\t87.33333333333333\t2023-08-29 13:15:19.999\nWARN\t15\t88.73333333333333\t2023-08-29 13:15:29.999\nWARN\t16\t72.6875\t2023-08-29 13:15:39.999\nWARN\t18\t71.66666666666667\t2023-08-29 13:15:49.999\nWARN\t16\t74.125\t2023-08-29 13:15:59.999\nWARN\t18\t70.77777777777777\t2023-08-29 13:16:09.999\nWARN\t17\t74.23529411764706\t2023-08-29 13:16:19.999\nWARN\t18\t72.16666666666667\t2023-08-29 13:16:29.999\nWARN\t17\t72.94117647058823\t2023-08-29 13:16:39.999\nWARN\t16\t70.8125\t2023-08-29 13:16:49.999\nWARN\t18\t71.5\t2023-08-29 13:16:59.999\nWARN\t16\t75.5625\t2023-08-29 13:17:09.999\nWARN\t17\t78.82352941176471\t2023-08-29 13:17:19.999\nWARN\t21\t77.04761904761905\t2023-08-29 13:17:29.999\nWARN\t20\t85.35\t2023-08-29 13:17:39.999\nWARN\t20\t88.85\t2023-08-29 13:17:49.999\nWARN\t20\t87.6\t2023-08-29 13:17:59.999\nWARN\t23\t87.47826086956522\t2023-08-29 13:18:09.999\nWARN\t21\t77.14285714285714\t2023-08-29 13:18:19.999\nWARN\t18\t77.61111111111111\t2023-08-29 13:18:29.999\nWARN\t19\t72.73684210526316\t2023-08-29 13:18:39.999\nWARN\t21\t70.28571428571429\t2023-08-29 13:18:49.999\nWARN\t21\t81.28571428571429\t2023-08-29 13:18:59.999\nWARN\t17\t80.0\t2023-08-29 13:19:09.999\nWARN\t15\t89.2\t2023-08-29 13:19:19.999\nWARN\t17\t88.3529411764706\t2023-08-29 13:19:29.999\nWARN\t18\t89.61111111111111\t2023-08-29 13:19:39.999\nWARN\t15\t89.86666666666666\t2023-08-29 13:19:49.999\nWARN\t14\t81.28571428571429\t2023-08-29 13:19:59.999\nWARN\t18\t74.11111111111111\t2023-08-29 13:20:09.999\nWARN\t17\t73.82352941176471\t2023-08-29 13:20:19.999\nWARN\t18\t77.44444444444444\t2023-08-29 13:20:29.999\nWARN\t18\t74.72222222222223\t2023-08-29 13:20:39.999\nWARN\t20\t74.3\t2023-08-29 13:20:49.999\nWARN\t20\t74.35\t2023-08-29 13:20:59.999\nWARN\t16\t80.625\t2023-08-29 13:21:09.999\nWARN\t21\t78.66666666666667\t2023-08-29 13:21:19.999\nWARN\t19\t81.3157894736842\t2023-08-29 13:21:29.999\nWARN\t19\t76.57894736842105\t2023-08-29 13:21:39.999\nWARN\t19\t78.05263157894737\t2023-08-29 13:21:49.999\nWARN\t20\t76.5\t2023-08-29 13:21:59.999\nWARN\t24\t78.54166666666667\t2023-08-29 13:22:09.999\nWARN\t21\t82.61904761904762\t2023-08-29 13:22:19.999\nWARN\t24\t70.625\t2023-08-29 13:22:29.999\nWARN\t21\t75.80952380952381\t2023-08-29 13:22:39.999\nWARN\t21\t85.57142857142857\t2023-08-29 13:22:49.999\nWARN\t20\t84.25\t2023-08-29 13:22:59.999\nWARN\t20\t72.3\t2023-08-29 13:23:09.999\nWARN\t21\t72.14285714285714\t2023-08-29 13:23:19.999\nWARN\t17\t78.3529411764706\t2023-08-29 13:23:29.999\nWARN\t20\t68.3\t2023-08-29 13:23:39.999\nWARN\t21\t63.95238095238095\t2023-08-29 13:23:49.999\nWARN\t21\t62.0\t2023-08-29 13:23:59.999\nWARN\t21\t75.61904761904762\t2023-08-29 13:24:09.999\nWARN\t21\t80.47619047619048\t2023-08-29 13:24:19.999\nWARN\t20\t82.35\t2023-08-29 13:24:29.999\nWARN\t16\t87.5\t2023-08-29 13:24:39.999\nWARN\t16\t91.0\t2023-08-29 13:24:49.999\nWARN\t19\t88.89473684210526\t2023-08-29 13:24:59.999\nWARN\t21\t79.80952380952381\t2023-08-29 13:25:09.999\nWARN\t21\t75.28571428571429\t2023-08-29 13:25:19.999\nWARN\t21\t79.42857142857143\t2023-08-29 13:25:29.999\nWARN\t23\t79.8695652173913\t2023-08-29 13:25:39.999\nWARN\t21\t75.0952380952381\t2023-08-29 13:25:49.999\nWARN\t19\t82.73684210526316\t2023-08-29 13:25:59.999\nWARN\t14\t90.35714285714286\t2023-08-29 13:26:09.999\nWARN\t12\t92.33333333333333\t2023-08-29 13:26:19.999\nWARN\t14\t78.85714285714286\t2023-08-29 13:26:29.999\nWARN\t13\t84.6923076923077\t2023-08-29 13:26:39.999\nWARN\t14\t90.28571428571429\t2023-08-29 13:26:49.999\nWARN\t15\t84.8\t2023-08-29 13:26:59.999\nWARN\t16\t74.75\t2023-08-29 13:27:09.999\nWARN\t17\t66.0\t2023-08-29 13:27:19.999\nWARN\t14\t72.64285714285714\t2023-08-29 13:27:29.999\nWARN\t17\t74.52941176470588\t2023-08-29 13:27:39.999\nWARN\t15\t66.06666666666666\t2023-08-29 13:27:49.999\nWARN\t16\t60.125\t2023-08-29 13:27:59.999\nWARN\t18\t69.83333333333333\t2023-08-29 13:28:09.999\nWARN\t17\t71.82352941176471\t2023-08-29 13:28:19.999\nWARN\t21\t80.19047619047619\t2023-08-29 13:28:29.999\nWARN\t21\t71.71428571428571\t2023-08-29 13:28:39.999\nWARN\t23\t76.1304347826087\t2023-08-29 13:28:49.999\nWARN\t22\t73.86363636363636\t2023-08-29 13:28:59.999\nWARN\t19\t76.0\t2023-08-29 13:29:09.999\nWARN\t21\t81.80952380952381\t2023-08-29 13:29:19.999\nWARN\t23\t74.91304347826087\t2023-08-29 13:29:29.999\nWARN\t23\t84.82608695652173\t2023-08-29 13:29:39.999\nWARN\t22\t76.45454545454545\t2023-08-29 13:29:49.999\nWARN\t21\t86.33333333333333\t2023-08-29 13:29:59.999\nWARN\t22\t79.5909090909091\t2023-08-29 13:30:09.999\nWARN\t22\t72.18181818181819\t2023-08-29 13:30:19.999\nWARN\t18\t69.33333333333333\t2023-08-29 13:30:29.999\nWARN\t15\t64.2\t2023-08-29 13:30:39.999\nWARN\t16\t64.5\t2023-08-29 13:30:49.999\nWARN\t17\t59.294117647058826\t2023-08-29 13:30:59.999\nWARN\t20\t65.85\t2023-08-29 13:31:09.999\nWARN\t21\t73.61904761904762\t2023-08-29 13:31:19.999\nWARN\t22\t75.81818181818181\t2023-08-29 13:31:29.999\nWARN\t25\t75.24\t2023-08-29 13:31:39.999\nWARN\t25\t76.12\t2023-08-29 13:31:49.999\nWARN\t23\t80.78260869565217\t2023-08-29 13:31:59.999\nWARN\t20\t87.1\t2023-08-29 13:32:09.999\nWARN\t17\t89.0\t2023-08-29 13:32:19.999\nWARN\t17\t87.29411764705883\t2023-08-29 13:32:29.999\nWARN\t15\t83.26666666666667\t2023-08-29 13:32:39.999\nWARN\t16\t90.8125\t2023-08-29 13:32:49.999\nWARN\t15\t84.26666666666667\t2023-08-29 13:32:59.999\nWARN\t16\t80.3125\t2023-08-29 13:33:09.999\nWARN\t19\t78.52631578947368\t2023-08-29 13:33:19.999\nWARN\t21\t76.38095238095238\t2023-08-29 13:33:29.999\nWARN\t19\t79.84210526315789\t2023-08-29 13:33:39.999\nWARN\t18\t73.88888888888889\t2023-08-29 13:33:49.999\nWARN\t21\t77.76190476190476\t2023-08-29 13:33:59.999\nWARN\t19\t69.73684210526316\t2023-08-29 13:34:09.999\nWARN\t19\t71.73684210526316\t2023-08-29 13:34:19.999\nWARN\t20\t73.5\t2023-08-29 13:34:29.999\nWARN\t25\t74.36\t2023-08-29 13:34:39.999\nWARN\t26\t79.8076923076923\t2023-08-29 13:34:49.999\nWARN\t24\t75.875\t2023-08-29 13:34:59.999\nWARN\t23\t81.34782608695652\t2023-08-29 13:35:09.999\nWARN\t23\t71.8695652173913\t2023-08-29 13:35:19.999\nWARN\t22\t72.81818181818181\t2023-08-29 13:35:29.999\nWARN\t21\t65.80952380952381\t2023-08-29 13:35:39.999\nWARN\t17\t59.64705882352941\t2023-08-29 13:35:49.999\nWARN\t21\t69.47619047619048\t2023-08-29 13:35:59.999\nWARN\t23\t62.91304347826087\t2023-08-29 13:36:09.999\nWARN\t24\t68.875\t2023-08-29 13:36:19.999\nWARN\t20\t70.55\t2023-08-29 13:36:29.999\nWARN\t19\t72.84210526315789\t2023-08-29 13:36:39.999\nWARN\t22\t74.0\t2023-08-29 13:36:49.999\nWARN\t20\t74.6\t2023-08-29 13:36:59.999\nWARN\t19\t83.78947368421052\t2023-08-29 13:37:09.999\nWARN\t18\t91.44444444444444\t2023-08-29 13:37:19.999\nWARN\t22\t90.04545454545455\t2023-08-29 13:37:29.999\nWARN\t22\t99.0909090909091\t2023-08-29 13:37:39.999\nWARN\t25\t97.52\t2023-08-29 13:37:49.999\nWARN\t25\t93.96\t2023-08-29 13:37:59.999\nWARN\t29\t94.55172413793103\t2023-08-29 13:38:09.999\nWARN\t28\t88.89285714285714\t2023-08-29 13:38:19.999\nWARN\t27\t88.88888888888889\t2023-08-29 13:38:29.999\nWARN\t25\t79.96\t2023-08-29 13:38:39.999\nWARN\t20\t75.8\t2023-08-29 13:38:49.999\nWARN\t18\t79.61111111111111\t2023-08-29 13:38:59.999\nWARN\t14\t74.0\t2023-08-29 13:39:09.999\nWARN\t13\t76.3076923076923\t2023-08-29 13:39:19.999\nWARN\t16\t63.8125\t2023-08-29 13:39:29.999\nWARN\t15\t67.6\t2023-08-29 13:39:39.999\nWARN\t18\t72.33333333333333\t2023-08-29 13:39:49.999\nWARN\t19\t69.52631578947368\t2023-08-29 13:39:59.999\nWARN\t23\t68.6086956521739\t2023-08-29 13:40:09.999\nWARN\t21\t69.33333333333333\t2023-08-29 13:40:19.999\nWARN\t16\t67.6875\t2023-08-29 13:40:29.999\nWARN\t18\t77.88888888888889\t2023-08-29 13:40:39.999\nWARN\t17\t79.0\t2023-08-29 13:40:49.999\nWARN\t17\t79.11764705882354\t2023-08-29 13:40:59.999\nWARN\t16\t80.0\t2023-08-29 13:41:09.999\nWARN\t19\t80.3157894736842\t2023-08-29 13:41:19.999\nWARN\t19\t86.89473684210526\t2023-08-29 13:41:29.999\nWARN\t19\t83.26315789473684\t2023-08-29 13:41:39.999\nWARN\t19\t87.26315789473684\t2023-08-29 13:41:49.999\nWARN\t19\t91.94736842105263\t2023-08-29 13:41:59.999\nWARN\t16\t99.4375\t2023-08-29 13:42:09.999\nWARN\t20\t97.35\t2023-08-29 13:42:19.999\nWARN\t19\t95.57894736842105\t2023-08-29 13:42:29.999\nWARN\t20\t89.5\t2023-08-29 13:42:39.999\nWARN\t19\t81.89473684210526\t2023-08-29 13:42:49.999\nWARN\t18\t76.94444444444444\t2023-08-29 13:42:59.999\nWARN\t19\t66.3157894736842\t2023-08-29 13:43:09.999\nWARN\t16\t53.6875\t2023-08-29 13:43:19.999\nWARN\t17\t55.1764705882353\t2023-08-29 13:43:29.999\nWARN\t15\t59.266666666666666\t2023-08-29 13:43:39.999\nWARN\t15\t67.66666666666667\t2023-08-29 13:43:49.999\nWARN\t19\t73.05263157894737\t2023-08-29 13:43:59.999\nWARN\t19\t78.42105263157895\t2023-08-29 13:44:09.999\nWARN\t21\t79.52380952380952\t2023-08-29 13:44:19.999\nWARN\t23\t86.21739130434783\t2023-08-29 13:44:29.999\nWARN\t26\t86.03846153846153\t2023-08-29 13:44:39.999\nWARN\t28\t79.96428571428571\t2023-08-29 13:44:49.999\nWARN\t24\t76.95833333333333\t2023-08-29 13:44:59.999\nWARN\t25\t81.56\t2023-08-29 13:45:09.999\nWARN\t22\t84.9090909090909\t2023-08-29 13:45:19.999\nWARN\t20\t79.65\t2023-08-29 13:45:29.999\nWARN\t19\t77.10526315789474\t2023-08-29 13:45:39.999\nWARN\t16\t80.125\t2023-08-29 13:45:49.999\nWARN\t16\t83.4375\t2023-08-29 13:45:59.999\nWARN\t15\t80.53333333333333\t2023-08-29 13:46:09.999\nWARN\t16\t78.5625\t2023-08-29 13:46:19.999\nWARN\t17\t79.0\t2023-08-29 13:46:29.999\nWARN\t17\t82.0\t2023-08-29 13:46:39.999\n"
+          }
+        ]
+      },
+      "apps": [],
+      "runtimeInfos": {},
+      "progressUpdateIntervalMs": 500,
+      "jobName": "paragraph_1693284924912_295268441",
+      "id": "paragraph_1693273945059_1980310577",
+      "dateCreated": "2023-08-29T04:55:24+0000",
+      "status": "READY",
+      "$$hashKey": "object:293"
+    },
+    {
+      "text": "/*\nCreate a sensor_state table connected to my-output-stream.\n*/\n",
+      "user": "anonymous",
+      "dateUpdated": "2023-08-29T04:55:24+0000",
+      "progress": 0,
+      "config": {
+        "editorSetting": {
+          "language": "scala",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "colWidth": 12,
+        "editorMode": "ace/mode/scala",
+        "fontSize": 9,
+        "results": {},
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "apps": [],
+      "runtimeInfos": {},
+      "progressUpdateIntervalMs": 500,
+      "jobName": "paragraph_1693284924914_1949940691",
+      "id": "paragraph_1693277482371_927533681",
+      "dateCreated": "2023-08-29T04:55:24+0000",
+      "status": "READY",
+      "$$hashKey": "object:294"
+    },
+    {
+      "user": "anonymous",
+      "progress": 0,
+      "config": {
+        "colWidth": 12,
+        "fontSize": 9,
+        "enabled": true,
+        "results": {},
+        "editorSetting": {
+          "language": "sql",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "editorMode": "ace/mode/sql"
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "apps": [],
+      "runtimeInfos": {},
+      "progressUpdateIntervalMs": 500,
+      "jobName": "paragraph_1693285052755_1287135655",
+      "id": "paragraph_1693285052755_1287135655",
+      "dateCreated": "2023-08-29T04:57:32+0000",
+      "status": "READY",
+      "focus": true,
+      "$$hashKey": "object:2009",
+      "text": "%flink.ssql\n\nCREATE TABLE sensor_state (\n    status VARCHAR(6),\n    num INTEGER,\n    avg_current_temperature DOUBLE,\n    hop_time TIMESTAMP(3)\n)\nWITH (\n'connector' = 'kinesis',\n'stream' = 'my-output-stream',\n'aws.region' = 'us-east-1',\n'scan.stream.initpos' = 'LATEST',\n'format' = 'json',\n'json.timestamp-format.standard' = 'ISO-8601');"
+    },
+    {
+      "text": "/*\nUse this INSERT INTO statement to continuously insert the result of the select into the sensor_state table.\n*/",
+      "user": "anonymous",
+      "dateUpdated": "2023-08-29T04:57:46+0000",
+      "progress": 0,
+      "config": {
+        "colWidth": 12,
+        "fontSize": 9,
+        "enabled": true,
+        "results": {},
+        "editorSetting": {
+          "language": "scala",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "editorMode": "ace/mode/scala"
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "apps": [],
+      "runtimeInfos": {},
+      "progressUpdateIntervalMs": 500,
+      "jobName": "paragraph_1693285066497_939006495",
+      "id": "paragraph_1693285066497_939006495",
+      "dateCreated": "2023-08-29T04:57:46+0000",
+      "status": "READY",
+      "focus": true,
+      "$$hashKey": "object:2078"
+    },
+    {
+      "user": "anonymous",
+      "progress": 0,
+      "config": {
+        "editorSetting": {
+          "language": "sql",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "colWidth": 12,
+        "editorMode": "ace/mode/sql",
+        "fontSize": 9,
+        "results": {},
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "apps": [],
+      "runtimeInfos": {},
+      "progressUpdateIntervalMs": 500,
+      "jobName": "paragraph_1693285078851_667177384",
+      "id": "paragraph_1693285078851_667177384",
+      "dateCreated": "2023-08-29T04:57:58+0000",
+      "status": "READY",
+      "focus": true,
+      "$$hashKey": "object:2147",
+      "text": "%flink.ssql(type=update)\n\nINSERT INTO sensor_state\nSELECT sensor_data.status,\n    COUNT(*) AS num,\n    AVG(sensor_data.current_temperature) AS avg_current_temperature,\n    HOP_ROWTIME(event_time, INTERVAL '10' second, INTERVAL '1' minute) as hop_time\nFROM sensor_data\nGROUP BY HOP(event_time, INTERVAL '10' second, INTERVAL '1' minute), sensor_data.status;",
+      "dateUpdated": "2023-08-29T04:58:10+0000"
+    },
+    {
+      "text": "/*\nThe data is also sent to the destination Kinesis data stream (my-output-stream) \nso that it can be used by other applications. \nFor example, the data in the destination stream can be used to update a real-time dashboard\n*/",
+      "user": "anonymous",
+      "dateUpdated": "2023-08-29T04:58:15+0000",
+      "progress": 0,
+      "config": {
+        "colWidth": 12,
+        "fontSize": 9,
+        "enabled": true,
+        "results": {},
+        "editorSetting": {
+          "language": "scala",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "editorMode": "ace/mode/scala"
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "apps": [],
+      "runtimeInfos": {},
+      "progressUpdateIntervalMs": 500,
+      "jobName": "paragraph_1693285095359_89459418",
+      "id": "paragraph_1693285095359_89459418",
+      "dateCreated": "2023-08-29T04:58:15+0000",
+      "status": "READY",
+      "focus": true,
+      "$$hashKey": "object:2216"
+    }
+  ],
+  "name": "Sensors",
+  "id": "2J9TQWN9N",
+  "defaultInterpreterGroup": "flink",
+  "version": "0.10.1",
+  "noteParams": {},
+  "noteForms": {},
+  "angularObjects": {},
+  "config": {
+    "isZeppelinNotebookCronEnable": false,
+    "looknfeel": "default",
+    "personalizedMode": "false"
+  },
+  "info": {},
+  "path": "/Sensors"
+}
