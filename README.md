@@ -5,164 +5,89 @@ This lab is provided as part of **[AWS Innovate Data Edition](https://aws.amazon
 ℹ️ You will run this lab in your own AWS account and running this lab will incur some costs. Please follow directions at the end of the lab to remove resources to avoid future costs.
 
 ## Table of Contents  
-* [Overview](#overview)  
-* [Architecture](#architecture)  
-* [Pre-Requisites](#pre-Requisites)  
-* [Setting up Amazon Kinesis Data Generator Tool](#setting-up-amazon-kinesis-data-generator-tool)  
-* [Kinesis Analytics Pipeline Application setup](#kinesis-analytics-pipeline-application-setup)
-* [Configure Output stream to a Destination](#configure-output-stream-to-a-destination)
-* [Test E2E Architecture](#test-e2e-architecture)
+* [Overview](#overview)   
+* [Create Kinesis Data Stream](#create-kinesis-data-stream)  
+* [Create Kinesis Data Generator](#create-kinesis-data-generator)  
+* [Sending Data from Kinesis Data Generator](#sending-data-from-kinesis-data-generator)
+* [Set Up Kinesis Data Analytics Studio Notebook](#set-up-kinesis-data-analytics-studio-notebook)
 * [Cleanup](#cleanup)
 * [Conclusion](#conclusion)
 * [Survey](#survey)
 
 
 ## Overview
-This lab helps you to use Kinesis Data Analytics to perform Real-Time Clickstream Anomaly Detection. The use case demonstrated in this lab is analysing clickstream data. Amazon Kinesis Data Analytics is a managed service that makes it easy to analyse web log traffic that drive business decisions in real-time.
-In this lab there are a few digital ad concepts in use:
-#### Impression
-An impression (also known as a view-through) is when a user sees an advertisement. In practice, an impression occurs any time a user opens an app or website and an advertisement is visible.
-#### Click/Engagement
-A Click or an Engagement is when a customer clicks on an ad.
-#### Click through Rate (CTR)
-A CTR is computed as Clicks / Impressions * 100. A CTR is a measure of the ad's effectiveness. While digital marketers are interested in the CTR to determine the performance of the ad, they are also interested if anamolous low-end CTRs that could be a result of a bad image or bidding model.
+This lab helps you to analyze [streaming data](https://aws.amazon.com/streaming-data/) using [Amazon Kinesis Data Analytics Studio] to get timely insights and react quickly to new information you receive from your business and your applications. 
 
-This lab helps identify anomalous data points within a data set using an unsupervised learning algorithm [RANDOM_CUT_FOREST](https://docs.aws.amazon.com/sagemaker/latest/dg/randomcutforest.html). 
-
-The lab uses the Kinesis Data Generator (KDG) tool to generate data and sends it to Amazon Kinesis. The tool provides a user-friendly UI that runs directly in your browser. 
+This is data that must usually be processed sequentially and incrementally on a record-by-record basis or over sliding time windows, and can be used for a variety of analytics including correlations, aggregations, filtering, and sampling.
 
 **Duration** - Approximately 2 hours
 
-## Architecture
+## Create Kinesis Data Stream
+1. Navigate to [**Amazon Kinesis console**](https://us-east-1.console.aws.amazon.com/kinesis/home?region=us-east-1#/streams)
+1. Choose **Create data stream**.
+1. For **Data stream name**, enter ```my-input-stream```.
+1. For Capacity mode, select On-demand and click **Create Data Stream**
+![KDS](./images/create-kds.png)
+1. Repeat steps above to create another Kinesis Data Stream named ```my-output-stream```
 
-![Architecture](./images/architecture.png)
+## Create Kinesis Data Generator
+1. Click [here](https://console.aws.amazon.com/cloudformation/home?region=us-east-1#/stacks/new?stackName=Kinesis-Data-Generator-Cognito-User&templateURL=https://aws-kdg-tools.s3.us-west-2.amazonaws.com/cognito-setup.json) to start with the CloudFormation stack creation screen. 
+Kinesis Data Generator uses a service called Amazon Cognito at the backend for login authentication and authorization of log sending permissions. 
+By creating this CloudFormation stack, you can create the necessary Cognito resources.
+1. In **"Step 1: Specify template"**, make sure that the Amazon S3 URL where the template source is located has already entered. Click **[Next]** without any changes.
+1. In **"Step 2: Specify stack details"**, enter the appropriate value for **"Username"** and **"Password"** for **"Kinesis Data Generator"**. The username and password specified here will be used to log in to Kinesis Data Gnerator later. Once you have entered, click **[Next]**.
+1. In **"Step 3: Configure stack options"**, click **[Next]** without any changes.
+1. In **"Step 4: Review"**, check the check-box of **"I acknowledge that AWS CloudFormation might create IAM resources with custom names "** at to bottom of the screen, and then click **[Create stack]** button to start the stack creation.
+1. Wait for a few minutes until the stack status changes  CREATE_COMPLETE.
 
-## Pre-Requisites
+## Sending Data from Kinesis Data Generator
+1. Choose **[Output]** tab of the CloudFormation stack you have created. You can open the setting screen of Kinesis Data Generator by clicking the URL of **"KinesisDataGeneratorUrl"** displayed.
+1. Enter the user name and password you have created in the the above step to **"Username"** and **"Password"** in the top right of the screen, and then login to it.
+1. Configure the log transfer setting actually in this step. In **"Region"**, choose **[us-east-1]** ( N. Virginia region), and then choose ```my-input-stream``` you have created earlier in **Stream/delivery stream**.
+1. Enter **"5"** to **Records per second** (the number of log records generated per second). This means that 5 records are created per 1 second. As a result 300 records are generated in one minute, and then sent to Kinesis Data Stream.
+1. In **"Record template"** below, copy and paste the following codes into **Templete 1** field. This specifies the format for logging sent from clients. 
+It automatically generates dummy sensors data to send to client.
+```
+{
+    "sensor_id": {{random.number(150)}},
+    "current_temperature": {{random.number(
+        {
+            "min":10,
+            "max":150
+        }
+    )}},
+    "status": "{{random.arrayElement(
+        ["OK","FAIL","WARN"]
+    )}}",
+    "event_time": "{{date.now("YYYY-MM-DDTHH:mm:ss.SSS")}}"
+}
+```
+1. Click **[Send data]** button at last to start sending the data. The Data continues to be sent to Kinesis Data Stream until you click [Stop Sending Data to Kinesis] displayed in the pop-up menu or close the browser tab.
 
-The below cloudformation template deploys the lab pre-requisites in your AWS account. 
-Note:
-* The stack selects the Asia Pacific(Sydney) for deployment, please alter the region as required.
-* Deploy stack
+## Set Up Kinesis Data Analytics Studio Notebook
+1. From the **Kinesis console**, select **my-input-stream** Kinesis data stream and choose **Process data in real time** from the Process drop-down. In this way, the stream is configured as a source for the notebook.
+![KDS Process Data](/images/kds-processdata.png)
+1. Choose **Apache Flink – Studio notebook** and click **Create**
+![KDS Studio Notebook](/images/kds-studio-notebook.png)
+1. Enter **my-notebook** as name and a description for the notebook. And choose to **Create** an AWS Glue Database
+![Create Studio Notebook](/images/create-studio-notebook.png)
+1. In the [AWS Glue console](https://us-east-1.console.aws.amazon.com/glue/home?region=us-east-1#/v2/data-catalog/databases), create an empty database named **my_database**
+![Create Database](/images/create-database.png)
+1. Navigate back to the **Kinesis Data Analytics Studio console**, refresh the list and select the new database. And choose **Create Studio notebook**.
+![Click Create Notebook](/images/create-studio-notebook-click.png)
+1. In the **Studio notebooks details** section, choose **Edit IAM permissions**
+![Edit Permissions](/images/edit-permissions.png)
+1. In the **Included destinations in IAM policy section**, choose the destination and select **my-output-stream**. Save changes and wait for the notebook to be updated.
+![Permissions](/images/IAM-Permission.png)
+1. Now that notebook has been created, choose Run
+![Run Notebook](/images/notebook-run.png)
 
-    | Region | CloudFormation |
-    | --- | --- |
-    | Asia Pacific(Sydney) | [![Launch Stack](images/cloudformation-launch-stack-button.png)](https://console.aws.amazon.com/cloudformation/home?region=ap-southeast-2#/stacks/new?stackName=rtcs-anamoly-detect&templateURL=https://s3.amazonaws.com/aws-dataengineering-day.workshop.aws/Kinesis_PreLab.yaml)|
-
-* The CloudFormation stack takes the following parameters as input:
-    |Parameter|Description|
-    | --- | --- |
-    |Username|User name for the KDG tool. Enter ```kplsetup```. This will be a user in the Amazon Cognito|
-    |Password|Password for the user in Amazon Cognito|
-    |Email|The email address to send anomaly events|
-    |SMS|The mobile phone number to send anomaly events|
-
-* Acknowledge that the CloudFormation might create IAM resources
-* While the stack runs, watch out for an email as below.
-![EmailSubscription](./images/EmailSubscription.png)
-* Confirm the subscription to receive the below message.
-![EmailSubscriptionConfirmation](./images/EmailSubscriptionConfirmation.png)
-* Once the stack is deployed, click the outputs tab to view more information.
-    * **KinesisDataGeneratorUrl** - This value is the Kinesis Data Generator (KDG) URL.
-    * **RawBucketName** - Store raw data coming from KDG.
-    * **ProcessedBucketName** - Store transformed data 
-   ![Stackoutput](./images/Stackoutput.png) 
-
-## Setting up Amazon Kinesis Data Generator Tool
-On the Outputs tab of the deployed CloudFormation stack, note the Kinesis Data Generator URL. Navigate to this URL and login into the Amazon Kinesis Data Generator (KDG) Tool.
-The KDG simplifies the task of generating data and sending it to Amazon Kinesis. The tool provides a user-friendly UI that runs directly in your browser. With the KDG, you can do the following tasks:
-   * Create templates that represent records for specific use cases
-   * Populate the templates with fixed or random data
-   * Save the templates for future use
-   * Continuously send thousands of records per second to your Amazon Kinesis stream or Firehose delivery stream
-
-#### Kinesis Data Generator (KDG) and Template setup
-1. Click on the KinesisDataGeneratorUrl on the Outputs tab on the stack.
-2. Sign in using the username and password you enetered in the CloudFormation console.
-![KDGLogin](./images/KDGLogin.png)
-3. After you sign in, you should see the KDG console. Select the region where the stack was deployed. e.g. ap-southeast-2.
-4. You need to set up some templates to mimic the clickstream web payload.
-5. Create the following templates in the KDG console. But do not click on the 'Send Data' yet:
-   |**Records per Second**|**Template Name**|**Payload**|**Description**|
-   | --- | --- | --- | --- |
-   | 1 |```Schema Discovery Payload``` | ```  {"browseraction":"DiscoveryKinesisTest", "site": "yourwebsiteurl.domain.com"}``` |Payload used for schema discovery|
-   | 1 |```Click Payload``` | ```  {"browseraction":"Click", "site": "yourwebsiteurl.domain.com"} ``` |Payload used for clickstream data|
-   | 1 |```Impression Payload``` | ```  {"browseraction":"Impression", "site": "yourwebsiteurl.domain.com"}``` |Payload used for impression stream data|
-   
-![KDGTemplateSetup](./images/KDGTemplateSetup.png)
-
- 
-## Kinesis Analytics Pipeline Application setup
-1. Navigate to the [Amazon Kinesis Analytics applications SQL applications (legacy)](https://console.aws.amazon.com/kinesisanalytics/home#/list/sql-applications-legacy)
-2. Click **Create SQL application (legacy)** to create an application.
-3. On the Create legacy SQL application page, fill the fields as follows:
-    * For application name, type ```anomaly-detection-application```.
-    * Type a description for the analytics application and click on Create Application
-
-        ![CreateKDA](./images/create-kda.png)
-
-    * Click **Create legacy SQL application**.
-    * Once created, On the application page, click **Configure** under Source tab.
-            ![ConfigureSourceStream](./images/ConfigureSourceStream.png)
-    * For Source, choose **Kinesis Firehose delivery stream**. 
-    * For Delivery stream, choose **{stack-name}-FirehoseDeliveryStream-{some-random-string}** from the "Kinesis Firehose delivery stream" dropdown. 
-    * For Record preprocessing with AWS Lambda, leave it as Off.
-    * For IAM role for reading source stream, select Choose from IAM roles that Kinesis Analytics can assume.. Under the Service role dropdown, choose the role **{stack-name}-CSEKinesisAnalyticsRole-{random string}**. 
-    * Select 'Off' for the Record preprocessing with AWS Lambda for this lab.
-    * Select 'Choose from IAM roles that Kinesis Data Analytics can assume' and associate the following service role: **{stack-name}-CSEKinesisAnalyticsRole-{random string}**
-
-        ![CreateKDA](./images/source-kda.png)
-
-    * **Do not** Click on Discover Schema at this point.
-        Open the KDG tool, and click on 'Send Data' for the 'Schema Discovery Payload' template. This will send the sample data to the Kinesis Data Firehose delivery stream.
-        Make sure to login to the tool. 
-            ![senddatatokinesis](./images/senddatatokinesis.png)
-    * Now go back to the AWS console and click on Discover Schema to display the schema and the formatted data received. 
-            ![disoverschema](./images/disoverschema.png)
-    * Click **Save changes**. Your Kinesis Data Analytics Application is created with an input stream.
-            ![source-da](./images/input-stream-kda.png)
-    * Now navigate to the 'Real-time analytics' tab and click on Configure.
-    * Replace the sql with the contents of the following file: [anomaly_detection.sql](./scripts/CloudFormation/Kinesis_Anlaytics_anomaly_detection.sql) and click on 'Save and run application'. This should take a minute to run.
-            ![rtanalyticssql](./images/rtanalyticssql.png)
-    * On the same page scroll down to view the Input and Output sub tab. The Input sub tab will list the source stream and the Output sub-tab will display the output streams created by the SQL run before.
-            ![inputoutput](./images/inputoutput.png)
-
-At this point you have created:
-* Kinesis Data Analytics application schema for click stream and impression stream data using the 'Schema Discovery Payload' sent from the KDG tool
-* An output stream schema, using [anomaly_detection.sql](./scripts/CloudFormation/Kinesis_Anlaytics_anomaly_detection.sql). The schema will in real-time convert the input stream to the output stream.
-
-Note: The DESTINATION_SQL_STREAM uses the RANDOM_CUT_FOREST function to detect anomalies within the input data stream. You can read more about the function [here](https://docs.aws.amazon.com/kinesisanalytics/latest/sqlref/sqlrf-random-cut-forest.html).
-
-## Configure Output stream to a Destination
-The DESTINATION_SQL_STREAM output stream contains records where anomalies have been found and need to be reported. In this section we will configure a new destination (a lambda function) to direct the anomalies to an SNS Topic.
-1. Stop sending data configured in the previous [step](#setting-up-amazon-kinesis-data-generator-tool).
-2. In the output subtab click on 'Connect to destination'.
-            ![outputconnecttodest](./images/outputconnecttodest.png)
-2. Select 'AWS Lambda function' as a destination and browse for the Lamdba function,**CSEBeconAnomalyResponse**, created by the CloudFormation template with version set as $LATEST.
-3. For Access Permissions, select 'Choose from IAM roles that Kinesis Data Analytics can assume' and select  **{stack-name}-CSEKinesisAnalyticsRole-{random-string}** as the service role.
-            ![destinationlambda](./images/destinationlambda.png)
-4. For the In-application stream name, select 'Choose an existing in-application stream' and select 'DESTINATION_SQL_STREAM' and leave the Ouput format as JSON. Click on Save Changes.
-            ![inappstreamname](./images/inappstreamname.png)
-            ![lamdadest](./images/lamdadest.png)
-
-## Test E2E Architecture
-This section tests the end to end architecture. The KDG tool is configured to send Impression and multiple click stream data to imitate an anomaly. The Kinesis Data Analytics application detects anomalies and sends these anomalies to the Lamdba function. The Lamdba function then sends a notification to an SNS topic and in turn to an email and an sms.
-**Note:** Stop data the click stream data after 20-30 seconds to prevent a large number of sms being sent.
-
-1. To send in the click and impression data we will need to login to the KDG tool in **5 tabs** and Send data to the Kinesis data stream firehose based on the table below. **Note:** Follow notes for Tab 3,4,5 to prevent excess notifications:
-    |**Tab**|**Template**|**Records per Second**|**Payload**|**Notes**
-    | --- | --- | --- | --- | --- |
-    |1|Impression|1| ```  {"browseraction":"Impression", "site": "yourwebsiteurl.domain.com"}``` |Can leave running|
-    |2|Click|1| ```  {"browseraction":"Click", "site": "yourwebsiteurl.domain.com"} ``` |Can leave running|
-    |3|Click|1| ```  {"browseraction":"Click", "site": "yourwebsiteurl.domain.com"} ``` |Stop after 20-30 seconds to prevent large number of emails and sms from SNS Topic|
-    |4|Click|1| ```  {"browseraction":"Click", "site": "yourwebsiteurl.domain.com"} ``` |Stop after 20-30 seconds to prevent large number of emails and sms from SNS Topic|
-    |5|Click|1| ```  {"browseraction":"Click", "site": "yourwebsiteurl.domain.com"} ``` |Stop after 20-30 seconds to prevent large number of emails and sms from SNS Topic|
-    
-2. With the KDG tool sending data to Kinesis, the input data can be viewed in the AWS Console.
-            ![inputclickimpressionstream](./images/inputclickimpressionstream.png)
-4. Similarly the data can be viewed in the output data stream. E.g. IMPRESSIONSTREAM, CLICKSTREAM. DESTINATION_SQL_STREAM. 
-            ![impressionstream](./images/impressionstream.png) ![outputclickstream](./images/outputclickstream.png)![destinationanomalyscore](./images/destinationanomalyscore.png)
-5. An email and sms is sent based on the detected anomalies. These anomalies are based on the 'DESTINATION_SQL_STREAM' stream with a destination of the lamda function.
-            ![anomalyemail](./images/anomalyemail.png)
+## Analyze Streaming Data
+1. When the notebook is running, choose **Open in Apache Zeppelin** to get access to the notebook and write code in SQL, Python, or Scala to interact with streaming data and get insights in real time.
+![Open Notebook](/images/notebook-open.png)
+1. Choose **Import Note** and upload [the following notebook](./scripts/Sensors.ipynb) and name it **Sensors**
+1. Open the imported note
+1. Follow the steps in the Notebook to perform streaming data analysis
 
 ## Cleanup
 Follow the below steps to cleanup your account to prevent any aditional charges:
@@ -176,7 +101,7 @@ Follow the below steps to cleanup your account to prevent any aditional charges:
             ![deletedeployedstack](./images/deletedeployedstack.png)
             
 ## Conclusion
-Throughout the lab, you've learnt how to use Kinesis Data Analytics to perform Real-Time Clickstream Anomaly Detection
+Throughout the lab, you've learnt how to use Kinesis Data Analytics Studio to analyze streaming data.
 
 [Streaming ingest and stream processing](https://docs.aws.amazon.com/wellarchitected/latest/analytics-lens/streaming-data-processing.html) is one of the scenarios in the [Well-Architected Framework Data Analytics Lens](https://docs.aws.amazon.com/wellarchitected/latest/analytics-lens/analytics-lens.html)
 
