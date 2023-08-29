@@ -28,7 +28,6 @@ This is data that must usually be processed sequentially and incrementally on a 
 1. For **Data stream name**, enter ```my-input-stream```.
 1. For Capacity mode, select On-demand and click **Create Data Stream**
 ![KDS](./images/create-kds.png)
-1. Repeat steps above to create another Kinesis Data Stream named ```my-output-stream```
 
 ## Create Kinesis Data Generator
 1. Click [here](https://console.aws.amazon.com/cloudformation/home?region=us-east-1#/stacks/new?stackName=Kinesis-Data-Generator-Cognito-User&templateURL=https://aws-kdg-tools.s3.us-west-2.amazonaws.com/cognito-setup.json) to start with the CloudFormation stack creation screen. 
@@ -75,30 +74,31 @@ It automatically generates dummy sensors data to send to client.
 ![Create Database](/images/create-database.png)
 1. Navigate back to the **Kinesis Data Analytics Studio console**, refresh the list and select the new database. And choose **Create Studio notebook**.
 ![Click Create Notebook](/images/create-studio-notebook-click.png)
-1. In the **Studio notebooks details** section, choose **Edit IAM permissions**
-![Edit Permissions](/images/edit-permissions.png)
-1. In the **Included destinations in IAM policy section**, choose the destination and select **my-output-stream**. Save changes and wait for the notebook to be updated.
-![Permissions](/images/IAM-Permission.png)
 1. Now that notebook has been created, choose Run
 ![Run Notebook](/images/notebook-run.png)
 
 ## Analyze Streaming Data
 1. When the notebook is running, choose **Open in Apache Zeppelin** to get access to the notebook and write code in SQL, Python, or Scala to interact with streaming data and get insights in real time.
+
 ![Open Notebook](/images/notebook-open.png)
-1. Choose **Import Note** and upload [the following notebook](./scripts/Sensors.zpln) and name it **Sensors**
-1. Open the imported note
-1. Follow the steps in the Notebook to perform streaming data analysis
+
+2. Choose **Import Note** and upload [the following notebook](./scripts/Sensors.zpln) and name it **Sensors**
+3. Open the imported note
+4. Follow the steps in the Notebook to perform streaming data analysis
+5. Please stop and [Sending Data from Kinesis Data Generator](#sending-data-from-kinesis-data-generator) again if you don't see the result in the queries
 
 ## Cleanup
 Follow the below steps to cleanup your account to prevent any aditional charges:
-* Navigate to the Kinesis Data Analytics application.
-* Select the 'anomaly-detection-application' application and click on Stop.
-            ![stopanalyticsapplication](./images/stopanalyticsapplication.png)
-* Select the 'anomaly-detection-application' application and click on Delete.
-            ![deleteanalyticsapplication](./images/deleteanalyticsapplication.png)
-* Navigate to the CloudFormation and find the stack that was deployed as part of the pre-requisites.
-* Select the stack and delete. This action will delete all the resources that were created as part of the lab and stop incurring charges.
-            ![deletedeployedstack](./images/deletedeployedstack.png)
+1. Navigate to the Kinesis Data Analytics Notebooks. Select the 'my-notebook' and click on Delete.
+    
+    ![Delete Notebook](./images/delete-notebook.png)
+2. Navigate to Kinesis Data Streams Console, select **my-input-stream** and click on Delete.
+    ![Delete Stream](./images/delete-stream.png)
+3. Navigate to the CloudFormation and find the stack that was deployed in step [Create Kinesis Data Generator](#create-kinesis-data-generator) 
+Select the stack and delete. 
+    ![deletedeployedstack](./images/deletedeployedstack.png)
+4. Navigate to the AWS Glue Databases Console and delete **my_database**
+    ![Delete Database](./images/delete-database.png)
             
 ## Conclusion
 Throughout the lab, you've learnt how to use Kinesis Data Analytics Studio to analyze streaming data.
